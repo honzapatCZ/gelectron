@@ -652,7 +652,8 @@ bool OverlayConnector::processkeyboardMessage(UINT message, WPARAM wParam, LPARA
     {
         if (directMessageInput_)
         {
-            PostMessage((HWND)focusWindow_.load(), message, wParam, lParam);
+            auto hwnd = reinterpret_cast<HWND>(focusWindow_.load());
+            PostMessage(hwnd, message, wParam, lParam);
         }
         else
         {
@@ -911,7 +912,7 @@ void OverlayConnector::_sendGraphicsHookInfo(const overlay_game::DxgiHookInfo &i
 void OverlayConnector::_sendGraphicsWindowSetupInfo(HWND window, int width, int height, bool focus, bool hooked)
 {
     overlay::GraphicsWindowSetup message;
-    message.window = (std::uint32_t)window;
+    message.window = WindowHandle(window);
     message.width = width;
     message.height = height;
     message.focus = focus;
@@ -942,7 +943,7 @@ void OverlayConnector::_sendGameWindowInput(std::uint32_t windowId, UINT msg, WP
 void OverlayConnector::_sendGraphicsWindowResizeEvent(HWND window, int width, int height)
 {
     overlay::GraphicsWindowRezizeEvent message;
-    message.window = (std::uint32_t)window;
+    message.window = WindowHandle(window);
     message.width = width;
     message.height = height;
 
@@ -952,7 +953,7 @@ void OverlayConnector::_sendGraphicsWindowResizeEvent(HWND window, int width, in
 void OverlayConnector::_sendGraphicsWindowFocusEvent(HWND window, bool focus)
 {
     overlay::GraphicsWindowFocusEvent message;
-    message.window = (std::uint32_t)window;
+    message.window = WindowHandle(window);
     message.focus = focus;
 
     _sendMessage(&message);
@@ -961,7 +962,7 @@ void OverlayConnector::_sendGraphicsWindowFocusEvent(HWND window, bool focus)
 void OverlayConnector::_sendGraphicsWindowDestroy(HWND window)
 {
     overlay::GraphicsWindowDestroyEvent message;
-    message.window = (std::uint32_t)window;
+    message.window = WindowHandle(window);
 
     _sendMessage(&message);
 }

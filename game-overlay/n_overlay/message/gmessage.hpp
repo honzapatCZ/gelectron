@@ -1,6 +1,7 @@
 #pragma once
 #include <assert.h>
 #include "ipc/ipcmsg.h"
+#include "windowhandle.hpp"
 
 //just use json
 //whatever...
@@ -135,7 +136,7 @@ struct Window : public GMessage
     GMESSAGE_AUTO("window");
 
     std::uint32_t windowId;
-    std::uint32_t nativeHandle;
+    std::uint64_t nativeHandle;
     std::string name;
     bool transparent = false;
     bool resizable = false;
@@ -166,7 +167,7 @@ struct WindowBounds : public GMessage
 {
     GMESSAGE_AUTO("window.bounds");
 
-    std::uint32_t windowId = 0;
+    std::uint32_t windowId;
     WindowRect rect;
     std::optional<std::string> bufferName;
 };
@@ -176,7 +177,7 @@ struct WindowFrameBuffer : public GMessage
 {
     GMESSAGE_AUTO("window.framebuffer");
 
-    std::uint32_t windowId = 0;
+    std::uint32_t windowId;
 };
 
 JSON_AUTO(WindowFrameBuffer, type, windowId)
@@ -342,7 +343,7 @@ struct GraphicsWindowSetup : public GMessage
 {
     GMESSAGE_AUTO("graphics.window");
 
-    std::uint32_t window;
+    WindowHandle window;
     int width;
     int height;
     bool focus;
@@ -355,7 +356,7 @@ struct GraphicsWindowFocusEvent : public GMessage
 {
     GMESSAGE_AUTO("graphics.window.event.focus");
 
-    std::uint32_t window;
+    WindowHandle window;
     bool focus;
 };
 
@@ -365,7 +366,7 @@ struct GraphicsWindowRezizeEvent : public GMessage
 {
     GMESSAGE_AUTO("graphics.window.event.resize");
 
-    std::uint32_t window;
+    WindowHandle window;
     int width;
     int height;
 };
@@ -376,7 +377,7 @@ struct GraphicsWindowDestroyEvent : public GMessage
 {
     GMESSAGE_AUTO("graphics.window.event.destroy");
 
-    std::uint32_t window;
+    WindowHandle window;
 };
 
 JSON_AUTO(GraphicsWindowDestroyEvent, type, window)
@@ -406,8 +407,8 @@ struct GameInput : public GMessage
 
     std::uint32_t windowId;
     std::uint32_t msg;
-    std::uint32_t wparam;
-    std::uint32_t lparam;
+    std::uint64_t wparam;
+    std::uint64_t lparam;
 };
 
 JSON_AUTO(GameInput, type, windowId, msg, wparam, lparam)

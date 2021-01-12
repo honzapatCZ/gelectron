@@ -31,8 +31,9 @@ INT WINAPI DllMain(HINSTANCE hModule, DWORD dwReason, LPVOID)
 {
     if (dwReason == DLL_PROCESS_ATTACH)
     {
-         trace::DebugConsole::allocDebugConsole();
+        trace::DebugConsole::allocDebugConsole();
 
+        // TODO: Error handling
         wchar_t name[MAX_PATH];
         GetModuleFileNameW(hModule, name, MAX_PATH);
         ::LoadLibraryW(name);

@@ -16,7 +16,7 @@ class OverlayConnector : public IIpcClient
     std::mutex windowsLock_;
     std::vector<std::shared_ptr<overlay::Window>> windows_;
     std::atomic<std::uint32_t> focusWindowId_ = 0;
-    std::atomic<std::uint32_t> focusWindow_ = 0;
+    std::atomic<std::uint64_t> focusWindow_ = 0;
 
     std::mutex framesLock_;
     std::map<std::uint32_t, std::shared_ptr<overlay_game::FrameBuffer>> frameBuffers_;
@@ -38,7 +38,7 @@ class OverlayConnector : public IIpcClient
 
     std::recursive_mutex mouseDragLock_;
     std::atomic<std::uint32_t> dragMoveWindowId_ = 0;
-    std::uint32_t dragMoveWindowHandle_ = 0;
+    std::uint64_t dragMoveWindowHandle_ = 0;
     POINT dragMoveLastMousePos_ = {0};
     std::uint32_t dragMoveMode_ = HTNOWHERE;
 
