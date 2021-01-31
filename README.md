@@ -43,24 +43,15 @@ For `electron-overlay` and `node-ovhook`
     npm run start
 ```
 
-### Test apps
-
-Visual Studio 2017 > gameoverlay.sln > Rebuild solution
-
-## Test
-
-1. build node projects
-2. run demo client
-3. click the start button to start overlay
-4. build test apps
-5. start dx11app and press ESC to do load inject dll for test
-6. press F1 to switch input intercepting
-
-## Inject a specific game
+### Recompile game-overlay dll
 
 In default they are precompiled under `client/dist/overlay` but if you are making changes you might want to compile on your own
 
 1. copy files [`n_overlay.dll`, `n_overlay.x64.dll`, `n_ovhelper.exe`, `n_ovhelper.x64.exe`] from directory `game-overlay\bin\Release` to directory `node-ovhook\build\Release`
+
+## Test
+
+1. build node projects
 2. run demo client
 3. click start button to start overlay
 4. start the game you want to inject to and wait for it game window to show
