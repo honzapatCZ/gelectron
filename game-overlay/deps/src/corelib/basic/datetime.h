@@ -28,8 +28,8 @@ namespace Storm
         static DateTime nowUTC();
         static int64_t currentMilliSecsSinceEpoch();
 
-        static DateTime fromUTCTimeStamp(std::uint32_t sec);
-        static DateTime fromTimeStamp(std::uint32_t sec);
+        static DateTime fromUTCTimeStamp(time_t sec);
+        static DateTime fromTimeStamp(time_t sec);
 
         void addMilliSecs(int64_t msecs);
 
@@ -112,7 +112,7 @@ namespace Storm
         return ms.count();
     }
 
-    inline DateTime DateTime::fromUTCTimeStamp(std::uint32_t sec)
+    inline DateTime DateTime::fromUTCTimeStamp(time_t sec)
     {
         DateTime dateTime;
         time_t curtime = sec;
@@ -134,7 +134,7 @@ namespace Storm
         return dateTime;
     }
 
-    inline DateTime DateTime::fromTimeStamp(std::uint32_t sec)
+    inline DateTime DateTime::fromTimeStamp(time_t sec)
     {
         DateTime dateTime;
         time_t curtime = sec ;

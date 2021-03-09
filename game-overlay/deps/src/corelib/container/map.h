@@ -122,9 +122,9 @@ namespace Storm {
             bool operator!=(const const_iterator &other) const { return node != other.node; }
 
             iterator& operator++() { node = node->forward[0]; return *this; }
-            iterator& operator++(int) { iterator r = *this; node = node->forward[0]; return r; }
+            iterator operator++(int) { iterator r = *this; node = node->forward[0]; return r; }
             iterator& operator--() { node = node->backword; return *this; }
-            iterator& operator--(int) { iterator r = *this; node = node->backword; return r; }
+            iterator operator--(int) { iterator r = *this; node = node->backword; return r; }
 
             iterator operator+(int j) const
             {
@@ -171,9 +171,9 @@ namespace Storm {
             bool operator!=(const const_iterator &other) const { return node != other.node; }
 
             const_iterator& operator++() { node = node->forward[0]; return *this; }
-            const_iterator& operator++(int) { const_iterator r = *this; node = node->forward[0]; return r; }
+            const_iterator operator++(int) { const_iterator r = *this; node = node->forward[0]; return r; }
             const_iterator& operator--() { node = node->backword; return *this; }
-            const_iterator& operator--(int) { const_iterator r = *this; node = node->backword; return r; }
+            const_iterator operator--(int) { const_iterator r = *this; node = node->backword; return r; }
 
             const_iterator operator+(int j) const
             {

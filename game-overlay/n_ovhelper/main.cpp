@@ -25,8 +25,8 @@ bool unsafeInjectDll(DWORD dwProcessId, PCWSTR pszLibFile)
             __leave;
 
         // Calculate the number of bytes needed for the DLL's pathname
-        int cch = 1 + lstrlenW(pszLibFile);
-        int cb = cch * sizeof(wchar_t);
+        auto cch = 1 + wcslen(pszLibFile);
+        auto cb = cch * sizeof(wchar_t);
 
         // Allocate space in the remote process for the pathname
         pszLibFileRemote = (PWSTR)

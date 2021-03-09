@@ -96,7 +96,7 @@ namespace Storm
     template<class K, class V>
     const K& OrderedMap<K, V>::keyAt(int index) const
     {
-        auto it = std::find_if(indexMap_.begin(), indexMap_.end(), [index](const std::pair<K, int>& p) { p.second == index; });
+        auto it = std::find_if(indexMap_.begin(), indexMap_.end(), [index](const std::pair<K, int>& p) { return p.second == index; });
         return it->first;
     }
 
