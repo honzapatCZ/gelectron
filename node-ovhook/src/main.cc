@@ -246,7 +246,7 @@ Napi::Value getTopWindows(const Napi::CallbackInfo &info)
 {
   Napi::Env env = info.Env();
 
-  bool include_minimized = true;
+  bool include_minimized = true; //allow minimized full-screen game windows to be found
   if (info.Length() == 1)
   {
     include_minimized = info[0].As<Napi::Boolean>();
