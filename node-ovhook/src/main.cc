@@ -265,18 +265,9 @@ Napi::Value getTopWindows(const Napi::CallbackInfo &info)
     window = next_window(window, mode);
   }
 
-  bool sIsElevated = FALSE;
   HANDLE hToken = NULL;
   TOKEN_ELEVATION elevation;
   DWORD dwSize;
-
-  	if (!OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &hToken))
-  	{
-  			if (!GetTokenInformation(hToken, TokenElevation, &elevation, sizeof(elevation), &dwSize))
-        	{
-        		sIsElevated = elevation.TokenIsElevated;
-        	}
-  	}
 
   auto arr = Napi::Array::New(env, windows.size());
   for (auto i = 0; i != windows.size(); ++i)
@@ -290,7 +281,6 @@ Napi::Value getTopWindows(const Napi::CallbackInfo &info)
     infoObject.Set("title", Napi::Value::From(env, win_utils::toUtf8(info.title)));
     infoObject.Set("executable", Napi::Value::From(env, win_utils::toUtf8(info.wName)));
     infoObject.Set("admin", Napi::Value::From(env, bool(info.fIsElevated)));
-    infoObject.Set("elevated", Napi::Value::From(env, bool(sIsElevated)));
 
     arr.Set(i, infoObject);
   }

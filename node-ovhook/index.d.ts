@@ -11,7 +11,6 @@ declare module "node-ovhook" {
         title: string;
         executable: string;
         admin: boolean;
-        elevated: boolean;
     }
 
     export interface IInjectResult {
