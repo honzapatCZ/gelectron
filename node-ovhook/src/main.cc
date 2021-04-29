@@ -52,6 +52,8 @@ struct window_hook_info
   std::wstring title;
   DWORD processId;
   DWORD threadId;
+  std::wstring wName;
+  BOOL fIsElevated;
 };
 
 static inline bool file_exists(const std::wstring& file)
@@ -114,10 +116,15 @@ static void get_window_title(std::wstring &name, HWND hwnd)
 
 static bool fill_window_info(window_hook_info &info, HWND hwnd)
 {
-  wchar_t wname[MAX_PATH];
+  wchar_t wName[MAX_PATH];
+  HANDLE hToken = NULL;
+  TOKEN_ELEVATION elevation;
+  DWORD dwSize;
+  BOOL fIsElevated = FALSE;
   win_scope_handle process;
   DWORD processId = 0;
   DWORD threadId = GetWindowThreadProcessId(hwnd, &processId);
+
   if (!threadId)
     return false;
 
@@ -131,12 +138,21 @@ static bool fill_window_info(window_hook_info &info, HWND hwnd)
     return false;
   }
 
-  if (!GetProcessImageFileNameW(process.handle, wname, MAX_PATH))
+  if (!GetProcessImageFileNameW(process.handle, wName, MAX_PATH))
     return false;
+
+  if (OpenProcessToken(process.handle, TOKEN_QUERY, &hToken)) {
+    if (GetTokenInformation(hToken, TokenElevation, &elevation, sizeof(elevation), &dwSize)) {
+        fIsElevated = elevation.TokenIsElevated;
+    } else {fIsElevated = FALSE;}
+  } else {fIsElevated = FALSE;}
+
 
   info.hwnd = hwnd;
   info.processId = processId;
   info.threadId = threadId;
+  info.wName = wName;
+  info.fIsElevated = fIsElevated;
 
   get_window_title(info.title, hwnd);
 
@@ -230,7 +246,7 @@ Napi::Value getTopWindows(const Napi::CallbackInfo &info)
 {
   Napi::Env env = info.Env();
 
-  bool include_minimized = false;
+  bool include_minimized = true;
   if (info.Length() == 1)
   {
     include_minimized = info[0].As<Napi::Boolean>();
@@ -249,6 +265,19 @@ Napi::Value getTopWindows(const Napi::CallbackInfo &info)
     window = next_window(window, mode);
   }
 
+  bool sIsElevated = FALSE;
+  HANDLE hToken = NULL;
+  TOKEN_ELEVATION elevation;
+  DWORD dwSize;
+
+  	if (!OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &hToken))
+  	{
+  			if (!GetTokenInformation(hToken, TokenElevation, &elevation, sizeof(elevation), &dwSize))
+        	{
+        		sIsElevated = elevation.TokenIsElevated;
+        	}
+  	}
+
   auto arr = Napi::Array::New(env, windows.size());
   for (auto i = 0; i != windows.size(); ++i)
   {
@@ -259,6 +288,9 @@ Napi::Value getTopWindows(const Napi::CallbackInfo &info)
     infoObject.Set("processId", Napi::Value::From(env, (std::uint32_t)info.processId));
     infoObject.Set("threadId", Napi::Value::From(env, (std::uint32_t)info.threadId));
     infoObject.Set("title", Napi::Value::From(env, win_utils::toUtf8(info.title)));
+    infoObject.Set("executable", Napi::Value::From(env, win_utils::toUtf8(info.wName)));
+    infoObject.Set("admin", Napi::Value::From(env, bool(info.fIsElevated)));
+    infoObject.Set("elevated", Napi::Value::From(env, bool(sIsElevated)));
 
     arr.Set(i, infoObject);
   }
@@ -279,7 +311,7 @@ Napi::Value injectProcess(const Napi::CallbackInfo &info)
   Napi::Object object = info[0].ToObject();
   const std::uint32_t processId = object.Get("processId").ToNumber().Uint32Value();
   const std::uint32_t threadId = object.Get("threadId").ToNumber().Uint32Value();
-  
+
   Napi::Object config = info[1].ToObject();
   std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
 
@@ -293,10 +325,10 @@ Napi::Value injectProcess(const Napi::CallbackInfo &info)
   std::wstring helper_path = x64 ? helperpath64 : helperpath;
   std::wstring dll_path = x64 ? overlaypath64 : overlaypath; //get_inject_dll_path(x64);
   const bool inject_helper_exist = file_exists(helper_path);
-  if(!inject_helper_exist)  
+  if(!inject_helper_exist)
     Napi::TypeError::New(env, "helper path doesnt exist").ThrowAsJavaScriptException();
   const bool inject_dll_exist = file_exists(dll_path);
-  if(!inject_dll_exist)  
+  if(!inject_dll_exist)
     Napi::TypeError::New(env, "dll path doesnt exist").ThrowAsJavaScriptException();
   const bool injected = inject_process(processId, threadId, dll_path, helper_path);
 

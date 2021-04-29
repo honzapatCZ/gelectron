@@ -1,14 +1,17 @@
-/// <reference types="node" />
+// <reference types="node" />
 declare module "node-ovhook" {
 
     export interface IProcessThread {
-        processId: number, 
+        processId: number,
         threadId: number;
     }
 
     export interface IWindow extends IProcessThread {
         windowId: number;
         title: string;
+        executable: string;
+        admin: boolean;
+        elevated: boolean;
     }
 
     export interface IInjectResult {
@@ -19,8 +22,8 @@ declare module "node-ovhook" {
 
     export interface IInjectConfig {
         dllPath: string,
-        dllPath64: string, 
-        helper: string, 
+        dllPath64: string,
+        helper: string,
         helper64: string
     }
 
