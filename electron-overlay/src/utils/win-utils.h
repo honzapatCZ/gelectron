@@ -102,7 +102,7 @@ inline bool createProcess(const std::wstring &path, const std::wstring &argument
     std::wstring cmdLine = L"\"";
     cmdLine.append(path).append(L"\" ").append(argument);
 
-    BOOL ret = CreateProcessW(path.c_str(), (LPWSTR)(cmdLine.c_str()), NULL, NULL, FALSE, 0, NULL, dir.c_str(), &StartupInfo, &ProcInfo);
+    BOOL ret = CreateProcessW(path.c_str(), (LPWSTR)(cmdLine.c_str()), NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, dir.c_str(), &StartupInfo, &ProcInfo); //CREATE_NO_WINDOW prevents a console to be created. otherwise pass 0
 
     if (ProcInfo.hProcess != NULL)
     {
