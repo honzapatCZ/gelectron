@@ -4,7 +4,7 @@
     "appId": "com.verseguide.overlay",
     "author": "verseguide.com",
     "description": "In-game Overlay for Star Citizen connecting to VerseGuide.com Database",
-    "version": "0.4.1",
+    "version": "0.4.2",
     "main": "dist/main/main.js",
     "license": "MIT",
     "scripts": {
@@ -16,7 +16,8 @@
         "start": "electron-forge start",
         "compile:electron": "electron-rebuild -v 11.2.0",
         "package": "electron-forge package",
-        "make": "electron-forge make --targets @electron-forge/maker-zip,@electron-forge/maker-squirrel"
+        "make": "electron-forge make --targets @electron-forge/maker-zip,@electron-forge/maker-squirrel",
+        "publish": "electron-forge publish"
     },
     "devDependencies": {
         "@electron-forge/cli": "^6.0.0-beta.54",
@@ -24,6 +25,7 @@
         "@electron-forge/maker-rpm": "^6.0.0-beta.54",
         "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
         "@electron-forge/maker-zip": "^6.0.0-beta.54",
+        "@electron-forge/publisher-github": "^6.0.0-beta.54",
         "@types/node": "^14.14.22",
         "@typescript-eslint/eslint-plugin": "^2.34.0",
         "@typescript-eslint/parser": "^2.34.0",
@@ -70,6 +72,7 @@
     },
     "config": {
         "forge": {
+            "publishers": "./forge.publishers.js",
             "packagerConfig": {
                 "icon": "./dist/assets/icon.ico",
                 "appBundleId": "com.verseguide.overlay",
@@ -96,14 +99,6 @@
                 },
                 {
                     "name": "@electron-forge/maker-zip"
-                },
-                {
-                    "name": "@electron-forge/maker-deb",
-                    "config": {}
-                },
-                {
-                    "name": "@electron-forge/maker-rpm",
-                    "config": {}
                 }
             ]
         }
