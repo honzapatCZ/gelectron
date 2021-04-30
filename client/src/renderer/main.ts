@@ -1,5 +1,37 @@
-import { ipcRenderer } from "electron"
-import { IpcRendererEvent } from "electron/main"
+import {
+  ipcRenderer
+} from "electron"
+import {
+  IpcRendererEvent
+} from "electron/main"
+
+// //// watch processes
+const WQL = window.require('wql-process-monitor');
+
+WQL.createEventSink(); //init the event sink
+const processMonitor = WQL.subscribe({
+  filterWindowsNoise: false
+}); //subscribe to all events, including chatter (only way to get trggered by admin processes)
+
+processMonitor.on("creation", ([process, pid, filepath]) => {
+
+  if (process === 'StarCitizen.exe') {
+    console.log(`Star Citizen launched: ${process}::${pid} ["${filepath}"]`);
+
+    setTimeout(() => {
+      console.log('Starting VerseGuide Overlay');
+      ipcRenderer.send("inject", pid)
+    }, 10000); //delay injection by 10 seconds
+
+  }
+});
+
+processMonitor.on("deletion", ([process, pid]) => {
+  if (process === 'StarCitizen.exe') {
+    console.log('Star Citizen terminated');
+  }
+});
+// ////
 
 const startButton = document.getElementById("start") as HTMLButtonElement
 startButton.addEventListener("click", () => {
@@ -7,10 +39,14 @@ startButton.addEventListener("click", () => {
 })
 
 const injectButton = document.getElementById("inject") as HTMLButtonElement
-const titleInput = document.getElementById("title") as HTMLInputElement
+
 injectButton.addEventListener("click", () => {
-  const title = titleInput.value
-  ipcRenderer.send("inject", title)
+  ipcRenderer.send("inject", null)
+})
+
+//send 'start' once main window is loaded (to create overlays, only happens once)
+document.addEventListener('DOMContentLoaded', (event) => {
+  ipcRenderer.send('start')
 })
 
 // const canvas = document.getElementById("canvas") as HTMLCanvasElement
@@ -18,28 +54,18 @@ injectButton.addEventListener("click", () => {
 
 const imageElem = document.getElementById("image") as HTMLImageElement
 
-ipcRenderer.on("osrImage", (event: IpcRendererEvent, arg: { image: string }) => {
-  const { image } = arg
-  // imageElem.onload = function() {
-  //   context.clearRect(0, 0, canvas.width, canvas.height)
-  //   context.drawImage(
-  //     imageElem,
-  //     0,
-  //     0,
-  //     imageElem.width,
-  //     imageElem.height,
-  //     0,
-  //     0,
-  //     canvas.width,
-  //     canvas.height
-  //   )
-  // }
+ipcRenderer.on("osrImage", (event: IpcRendererEvent, arg: {
+  image: string
+}) => {
+  const {
+    image
+  } = arg
   imageElem.src = image
 })
 
-window.onfocus = function () {
+window.onfocus = function() {
   console.log("focus")
 }
-window.onblur = function () {
+window.onblur = function() {
   console.log("blur")
 }

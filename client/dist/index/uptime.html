@@ -1,0 +1,29 @@
+<html>
+
+<head>
+    <style>
+        body {
+            overflow: hidden;
+            margin: 0px;
+            height: 20px;
+            width: 200px;
+        }
+    </style>
+    <title>OsrWindow</title>
+</head>
+
+<body>
+    <div>
+        Uptime: <span id="uptime"></span>
+    </div>
+    <script>
+        const label = document.getElementById('uptime')
+        var SECONDS = 0
+        setInterval(() => {
+            SECONDS++;
+            label.innerText = (new Date(SECONDS * 1000).toISOString().substr(11, 8)).toString()
+        }, 1000)
+    </script>
+</body>
+
+</html>

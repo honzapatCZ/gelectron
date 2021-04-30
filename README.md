@@ -1,26 +1,6 @@
-# game overlay
+# VerseGuide.com Star Citizen Game Overlay 
 
-fork of https://github.com/hiitiger/gelectron
-
-![demo](https://raw.githubusercontent.com/honzapatCZ/gelectron/master/screenshot/gelectron3.gif)
-
-Use the power of web to inject any web app to overlay in your game
-
-## Features
-
-use the power of web to inject any web app to overlay in your game
-
-- electron offscreen window overlay in game
-- dx11 api support
-- dx10 api support
-- dx9 api support
-- multi windows support
-- window z-index and focus
-- in game sync drag and resize
-- window draw policy
-- input intercepting by manually control
-- custom shaped window (alpha test for mouse handling)
-- input intercepting by auto mouse check
+Creates interactive transparent browser windows  inside the game window
 
 ## Requirements
 
@@ -29,34 +9,30 @@ use the power of web to inject any web app to overlay in your game
 
 ## Build
 
-### node native-addons
-
-For `electron-overlay` and `node-ovhook`
+### Electron with node native-addons `electron-overlay` and `node-ovhook`
 
 ```bash
     cd client
+
     npm link ../electron-overlay
     npm link ../node-ovhook
-    npm i
+
+    npm i (creates symlink only, breaks electron-forge make - make sure to manually copy electron-overlay and node-ovhook to node_modules!)
     npm run compile:electron
+
     npm run build
-    npm run start
+    npm run dev (develop)
+    npm run make (windows zip/exe/msi with forge) 
 ```
 
 ### Recompile game-overlay dll
 
 In default they are precompiled under `client/dist/overlay` but if you are making changes you might want to compile on your own
 
-1. copy files [`n_overlay.dll`, `n_overlay.x64.dll`, `n_ovhelper.exe`, `n_ovhelper.x64.exe`] from directory `game-overlay\bin\Release` to directory `node-ovhook\build\Release`
+```bash
+    cd game-overlay
 
-## Test
+    build.bat
+```
 
-1. build node projects
-2. run demo client
-3. click start button to start overlay
-4. start the game you want to inject to and wait for it game window to show
-5. input the window title(or part of the title) of the game, and click the inject button
-
-## Usage
-
-Check doc/doc.md for usage in your own projects
+copy files [`n_overlay.dll`, `n_overlay.x64.dll`, `n_ovhelper.exe`, `n_ovhelper.x64.exe`] from directory `game-overlay\bin\Release` to directory `client\dist\overlay`

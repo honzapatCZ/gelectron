@@ -1,36 +1,133 @@
+<!DOCTYPE html>
 <html>
 
 <head>
+    <meta charset="utf-8"/>
     <style>
         body {
-            background-color: rgba(67, 138, 138, 0.25);
-            margin: 10px;
-        }
-
-        h1 {
-            color: maroon;
-            margin-left: 40px;
-        }
-
-        .caption {
-            height: 40px;
-            background-color: brown
+            overflow: hidden;
+            height: 600px;
+            width: 500px;
+            font-family: Roboto;
         }
     </style>
-    <title>OsrWindow</title>
+    <title>VerseGuide Widgets - Options</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.light_blue-blue.min.css" />
+
 </head>
 
 <body>
-    <div>
-        <div class="caption"></div>
-        <button id="button">Button</button>
+    <div style="background-color:rgba(0,0,0,.67); padding: 16px; border-radius: 7.8674px;">
+
+        <div >
+            <img src="../assets/verseguide.svg" alt="VerseGuide" width="300" style="margin-right: 84px; margin-left: 84px; margin-bottom: 16px;">
+        </div>
+
+        <div class="none" style="margin-bottom: 16px; width: 452px;  border-radius: 7.8674px; font-weight: 300; font-family: Roboto; padding: 8px;   color: white; ">
+            Type command <span style="font-weight: bold">'<code>/showlocation</code>'</span> in Global Chat to manually to trigger a location update.
+        </div>
+
+        <div class="none" style="margin-bottom: 16px; width: 452px;  border-radius: 7.8674px; font-weight: 500; font-family: Roboto; padding: 8px;  background-color:rgba(0,0,0,.67); color: white; border: thin solid white;">
+        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="show">
+            <input type="checkbox" id="show" class="mdl-switch__input" checked>
+            <span class="mdl-switch__label">Show VerseGuide Overlay</span>
+        </label>
+            <span style="font-weight: 300; font-family: Roboto;">
+                You can always access these settings via [Alt]+[.].<br/>
+                Use shortcut [Alt]+[,] to hide the VerseGuide overlay.
+            </span>
+        </div>
+
+        <div class="none" style="margin-bottom: 16px; width: 452px;  border-radius: 7.8674px; font-weight: 500; font-family: Roboto; padding: 8px;  background-color:rgba(0,0,0,.67); color: white;  border: thin solid white;">
+        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="auto">
+            <input type="checkbox" id="auto" class="mdl-switch__input">
+            <span class="mdl-switch__label">Auto-update Location</span>
+        </label>
+            <span style="font-weight: 300; font-family: Roboto;">
+                Automatically sends the '<code>/showlocation</code>' command every minute.<br/>
+                You need to have Global Chat visible for this to work (F12).
+            </span>
+        </div>
+
+        <div class="none" style="margin-bottom: 16px; width: 452px; border-radius: 7.8674px; font-weight: 500; font-family: Roboto; padding: 8px;   background-color:rgba(0,0,0,.67); color: white;  border: thin solid white;">
+        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="fps">
+            <input type="checkbox" id="fps" class="mdl-switch__input" checked>
+            <span class="mdl-switch__label">Display FPS</span>
+        </label>
+            <span style="font-weight: 300; font-family: Roboto;">
+                DirectX framerate.<br/>
+                For performance testing.
+            </span>
+        </div>
+
+        <div class="none" style="width: 452px;  border-radius: 7.8674px; font-weight: 300; font-family: Roboto; padding: 8px;   color: white; ">
+            made possible by Citizens Pitapa, justMurphy, xabdiben, Graupunkt, StoicMako and LordSkippy<br/>
+            based on github.com/hiitiger/gelectron (forked by honzapatCZ) under MIT License<br/>
+            more crazy awesomeness at verseguide.com
+        </div>
+
+
+        <!-- button id="button">Button</button>
         <button id="doit">doit</button>
         <br /> Hello Electron!
 
         <label id="label">Label</label>
-        <input type="text"><input>
+        -->
     </div>
     <script>
+
+
+        const {
+            ipcRenderer,
+            remote
+        } = window.require('electron')
+
+        ipcRenderer.on("hideToggle", (event) => {
+
+            document.getElementById('show').click();
+
+        })
+
+        let show = document.getElementById("show")
+
+        show.addEventListener("change", () => {
+
+            if (show.checked) {
+                ipcRenderer.send("showOverlay")
+            } else {
+                ipcRenderer.send("hideOverlay")
+            }
+        })
+
+        let auto = document.getElementById("auto")
+
+        auto.addEventListener("change", () => {
+
+            if (auto.checked) {
+                ipcRenderer.send("updateOn")
+            } else {
+                ipcRenderer.send("updateOff")
+            }
+        })
+
+        let fps = document.getElementById("fps")
+
+        fps.addEventListener("change", () => {
+
+            if (fps.checked) {
+                ipcRenderer.send("fpsOn")
+            } else {
+                ipcRenderer.send("fpsOff")
+            }
+        })
+
+        /*
+
         const label = document.getElementById('label')
         setInterval(() => {
             label.innerText = (new Date()).toString()
@@ -60,6 +157,8 @@
         window.onblur = function () {
             console.log("blur")
         }
+
+         */
     </script>
 </body>
 

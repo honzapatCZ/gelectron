@@ -5,5 +5,6 @@ declare namespace NodeJS {
             distDir: string;
             entryUrl: string;
         };
+        FBAPI: string;
     }
 }

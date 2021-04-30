@@ -3,55 +3,605 @@
 
 <head>
     <meta charset="UTF-8" />
-    <title>AppWindow</title>
+    <title>VerseGuide</title>
     <style>
+
+        .none {
+            display: none !important;
+        }
+
         body {
+            width: 600px;
+            height: 850px;
+            background-color: rgba(0,0,0,.33);
+            font-family: "univiaPro", sans-serif !important;
             overflow: hidden;
-            background-color: rgb(61, 70, 73);
+            color: white;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
-        .content {
+
+        .mdl-layout__content::-webkit-scrollbar {
+            width: 14px;
+        }
+        .mdl-layout__content::-webkit-scrollbar-corner {
+            background: rgba(0,0,0,0);
+        }
+        .mdl-layout__content::-webkit-scrollbar-thumb {
+            background-color: rgba(0, 0, 0, 0.33);
+            border-top: 8px solid rgba(0,0,0,0);
+            border-bottom: 8px solid rgba(0,0,0,0);
+            border-left: 0;
+            border-right: 6px solid rgba(0,0,0,0);
+            background-clip: content-box;
+            min-width: 14px;
+            min-height: 32px;
+        }
+        .mdl-layout__content::-webkit-scrollbar-track {
+            background-color: rgba(0,0,0,0);
+        }
+
+        img, a {
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        .mdl-layout {
+            box-sizing: border-box;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,.2);
+        }
+
+        .mdl-layout__header {
+            background: transparent !important;
+        }
+
+        .mdl-button {
+            font-family: "univiaPro", sans-serif !important;
+        }
+
+        .top {
             position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            box-sizing: border-box;
+            height: 32px !important;
+        }
+
+        .bottom {
+            box-sizing: border-box;
+            background-color: rgba(0, 0, 0, 0.33);
+            color: white;
             width: 100%;
-            height: 100%;
+            padding: 10px;
+        }
+
+        .portfolio-header {
             -webkit-app-region: drag;
+            position: relative;
+        }
+        .portfolio-header::after {
+            content: "";
+            background-image: url("../assets/background.jpg");
+            background-size: cover;
+            background-position: center center;
+            opacity: 0.5;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            position: absolute;
+            z-index: -1;
         }
 
-        .title {
-            display: block;
+        .portfolio-header .mdl-layout__header-row {
+            padding: 0;
+            -webkit-justify-content: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+        }
+
+        .mdl-layout__title {
+            font-size: 14px;
+            line-height: 150px;
             text-align: center;
-            color: #e8ecdc;
-            font-family: Microsoft YaHei;
-            font-size: 18px;
-            font-weight: normal;
-            margin-top: 10px;
+            font-weight: 300;
         }
 
-        canvas {
-            width: 640px;
-            height: 360px;
-            background-color: linen;
+
+        .portfolio-logo-row {
+            min-height: 200px;
         }
 
-        image {
-            width: 640px;
-            height: 360px;
+
+        .mdl-layout__tab-bar {
+            background-color: rgba(0, 0, 0, 0.33) !important;
         }
+
+        .mdl-menu__outline, .mdl-dialog {
+            background-color: rgba(255,255,255,.8) !important;
+            backdrop-filter: blur(4px);
+            box-shadow: none !important;
+            border: 1px solid rgba(0,0,0,.2) !important;
+            box-sizing: border-box;
+            color: white !important;
+            border-radius: 4px !important;
+            overflow: hidden;
+        }
+
+        .mdl-menu, .mdl-menu__outline {
+            border-radius: 2px !important;
+            overflow: hidden;
+        }
+
+        .top .mdl-menu__outline {
+            margin-left: 16px;
+            margin-top: -16px;
+        }
+
+        .bottom .mdl-menu__outline {
+            margin-left: 20px;
+            margin-top: 20px;
+        }
+
+        .mdl-menu__item {
+            font-size: 14px !important;
+            height: 42px !important;
+            line-height: 42px !important;
+            padding: 0 16px !important;
+        }
+
+        .mdl-menu__item {
+            font-weight: 500 !important;
+        }
+
+        .mdl-menu__item:hover {
+            background-color: rgba(255,255,255,.9) !important;
+        }
+
+        .mdl-tooltip {
+            background-color: rgba(158,158,158,.2) !important;
+            line-height: 12px !important;
+            font-size: 12px !important;
+            padding: 10px !important;
+            border-radius: 0 !important;
+        }
+
+        .mdl-menu__item--full-bleed-divider {
+            border-bottom: 1px solid rgba(0,0,0,.12) !important;
+        }
+
+        .light .mdl-button--accent {
+            height: 40px !important;
+            padding: 0 22px !important;
+            color: black !important;
+            text-transform: none !important;
+            font-weight: 500 !important;
+        }
+
+        .light .mdl-button--colored {
+            height: 40px !important;
+            padding: 0 22px !important;
+            box-shadow: none !important;
+            text-transform: none !important;
+            font-weight: 500 !important;
+        }
+
+        .dark .mdl-button--accent {
+            box-sizing: content-box !important;
+            border: 2px solid transparent !important;
+            color: white !important;
+            opacity: .67;
+            text-transform: none !important;
+            font-weight: 500 !important;
+        }
+
+        .dark .mdl-button--colored {
+            box-sizing: content-box !important;
+            border: 2px solid rgba(255,255,255,.44) !important;
+            background-color: transparent !important;
+            color: rgb(64,196,255) !important;
+            text-transform: none !important;
+            font-weight: 500 !important;
+        }
+
+        .mdl-button--fab {
+            box-sizing: border-box !important;
+            box-shadow: none !important;
+            border: 2px solid rgba(255,255,255,.44) !important;
+            color: white !important;
+            background-color: rgba(0, 0, 0, 0.33) !important;
+            background-position: center !important;
+            background-size: cover !important;
+            overflow: hidden !important;
+        }
+
+        .mdl-textfield__input {
+            font-weight: 500 !important;
+            font-family: "univiaPro", sans-serif !important;
+        }
+
+        .mdl-textfield__input {
+            border-bottom: 1px solid rgba(0,0,0,.48) !important;
+        }
+
+        .mdl-textfield__label {
+            color: rgba(0,0,0,.52) !important;
+        }
+
+        .mdl-checkbox__box-outline {
+            border: 2px solid rgba(0,0,0,.48) !important;
+        }
+
+        .mdl-checkbox.is-checked .mdl-checkbox__box-outline {
+            border: 2px solid rgb(64,196,255) !important;
+        }
+
+        .dark .mdl-textfield__input {
+            border-bottom: 1px solid rgba(255,255,255,.48) !important;
+        }
+
+        .dark .mdl-textfield__label {
+            color: rgba(255,255,255,.52) !important;
+        }
+
+
+        .dark .mdl-checkbox__box-outline {
+            border: 2px solid rgba(255,255,255,.8) !important;
+        }
+
+        .dark .mdl-checkbox.is-checked .mdl-checkbox__box-outline {
+            border: 2px solid rgb(64,196,255) !important;
+        }
+
+
     </style>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="../assets/fonts/univiaPro.css" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/fonts/materialIcons.css">
+    <script defer src="../assets/material.min.js"></script>
+    <link rel="stylesheet" href="../assets/style.css" />
+
 </head>
 
 <body>
-    <div class="content">
-        <button id='start'>start overlay</button>
-        <br>
-        <input id='title' placeholder='input the game window title'></input>
-        <button id='inject'>inject game</button>
-        <label class="title">Hello...</label>
-        <!-- <canvas id='canvas'></canvas> -->
-        <image id='image'></image>
+
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header
+            mdl-layout--fixed-tabs" style="overflow: hidden !important;">
+
+
+    <header class="mdl-layout__header mdl-layout__header--fixed portfolio-header glow">
+        <div class="mdl-layout__header-row portfolio-logo-row">
+
+            <div class="top mdl-layout__header-row">
+                <!-- Title -->
+                <!-- Right aligned menu below button -->
+                <button id="demo-menu-bottom-left" style="-webkit-app-region: no-drag; border-radius: 0 !important;"
+                        class="mdl-button mdl-js-button mdl-button--icon">
+                    <i class="material-icons">menu</i>
+                </button>
+
+
+                <ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" style="-webkit-app-region: no-drag; margin-left: 16px; margin-top: -16px; padding: 0 !important;"
+                    data-mdl-for="demo-menu-bottom-left">
+                    <li class="mdl-menu__item mdl-layout__header-row" style="justify-content: left !important;" onclick="window.open('https://verseguide.com')">
+                        <i class="material-icons">web</i>
+                        <span style="margin-left: 14px;">VerseGuide.com</span>
+                    </li>
+                    <li class="mdl-menu__item mdl-layout__header-row" style="justify-content: left !important;" onclick="window.open('https://discord.gg/Pge9zckdbk')">
+                        <i class="material-icons">support_agent</i>
+                        <span style="margin-left: 14px;">Discord</span>
+                    </li>
+                    <li class="mdl-menu__item mdl-layout__header-row mdl-menu__item--full-bleed-divider" style="justify-content: left !important;" onclick="window.open('https://verseguide.com/legal')">
+                        <i class="material-icons">policy</i>
+                        <span style="margin-left: 14px;">Privacy notice</span>
+                    </li>
+
+                    <li id='quitVerseguide' class="mdl-menu__item mdl-layout__header-row" style="justify-content: left !important;">
+                        <i class="material-icons">close</i>
+                        <span style="margin-left: 14px;">Quit</span>
+                    </li>
+
+                </ul>
+
+                <button id="demo-menu-debug" style="-webkit-app-region: no-drag; border-radius: 0 !important; opacity: .2;"
+                        class="mdl-button mdl-js-button mdl-button--icon">
+                    <i class="material-icons">bug_report</i>
+                </button>
+
+
+                <ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" style="-webkit-app-region: no-drag; margin-left: 16px; margin-top: -16px; padding: 0 !important;"
+                    data-mdl-for="demo-menu-debug">
+                    <li id='start' class="mdl-menu__item">Create widgets</li>
+                    <li id='inject' class="mdl-menu__item">Inject overlay</li>
+                    <li id='getUser' class="mdl-menu__item mdl-menu__item--full-bleed-divider">Fetch current user</li>
+                    <li class="mdl-menu__item">Log files</li>
+                </ul>
+
+                <div class = "mdl-layout-spacer"></div>
+
+                <button id="minimizeVerseguide" style="-webkit-app-region: no-drag;  border-radius: 0 !important;"
+                        class="mdl-button mdl-js-button mdl-button--icon">
+                    <i class="material-icons">minimize</i>
+                </button>
+                <div class="mdl-tooltip mdl-tooltip--left" data-mdl-for="minimizeVerseguide">
+                    minimize to tray
+                </div>
+
+
+            </div>
+
+                <span class="mdl-layout__title">
+
+                    <span class="mdl-layout__title"><img src="../assets/verseguide.svg" alt="VerseGuide Overlay" style="height: 150px; width: auto;"></span>
+                </span>
+        </div>
+        <div class="mdl-layout__tab-bar mdl-js-ripple-effect" style="-webkit-app-region: no-drag">
+            <a href="#fixed-tab-1" class="mdl-layout__tab is-active" style="text-transform: none !important; font-size: larger;">Overlay</a>
+            <a href="#fixed-tab-2" class="mdl-layout__tab" style="text-transform: none !important; font-size: larger;">Location History</a>
+            <a href="#fixed-tab-3" class="mdl-layout__tab" style="text-transform: none !important; font-size: larger;">About</a>
+        </div>
+    </header>
+
+    <main class="mdl-layout__content">
+        <section class="mdl-layout__tab-panel is-active" id="fixed-tab-1">
+            <div class="page-content">
+
+                <div style="padding: 25px;">
+                <p style="text-align: center; font-size: larger; margin-bottom: 25px;">Thank you for testing the VerseGuide Overlay!</p>
+                <p style="text-align: center; margin-bottom: 25px;">This is an early debug build. Many planned feature are still missing.</p>
+
+                    <div class="mdl-grid" style="margin: 0 10px; border-radius: 15px; background-color: rgba(0, 0, 0, 0.33);">
+                        <div class="mdl-cell mdl-cell--3-col" style="text-align: center;"><image id='image'></image></div>
+                        <div class="mdl-cell mdl-cell--5-col">
+                            <p style="margin-bottom: 0;">You can minimize this window and launch Star Citizen. With any luck you will see the in-game overlay indicator in the top right corner.</p>
+                        </div>
+                    </div>
+
+                    <p style="text-align: center; margin-top: 25px;">Please contact us on <a href="https://discord.gg/Pge9zckdbk" target="_blank">Discord</a> to provide feedback.</p>
+
+                    <p style="text-align: center;">Version v<span id="version"></span></p>
+
+                </div>
+
+            </div>
+        </section>
+        <section class="mdl-layout__tab-panel" id="fixed-tab-2">
+            <div class="page-content"><!-- Your content goes here --></div>
+        </section>
+        <section class="mdl-layout__tab-panel" id="fixed-tab-3">
+            <div class="page-content">
+
+                <div style="padding: 25px;">
+                    <p style="text-align: center; font-size: larger;">VerseGuide.com presents an in-game overlay for</p>
+                    <div style="text-align: center;"><img src="../assets/STARCITIZEN_HORIZONTAL_WHITE.png" alt="Star Citizen" style="height: auto; width: 450px; margin-bottom: 15px;"></div>
+                    <p style="text-align: center; margin-bottom: 25px;">… that allows you to determine the time of day, save your favorite places, and generate an optimal flight path to any planetary location in the 'verse.</p>
+
+
+
+
+                    <div class="mdl-grid" style="margin: 0 10px; border-radius: 15px; background-color: rgba(0, 0, 0, 0.33);">
+                        <div class="mdl-cell mdl-cell--3-col" style="text-align: center;"><div><img src="../assets/MadeByTheCommunity_Black.png" alt="Made by the Community" style="height: 115px; width: auto;"></div></div>
+                        <div class="mdl-cell mdl-cell--5-col">
+                            <p style="font-size: smaller; line-height: 20px;">This is an unofficial Star Citizen project, not affiliated with the Cloud Imperium group of companies. All content within this project not authored by its developer or users are property of their respective owners.</p>
+                            <p style="font-size: smaller; line-height: 12px; margin: 0; font-weight: 700;">© 2951 by VerseGuide</p>
+                        </div>
+                    </div>
+
+                    <p style="margin-top: 25px; font-size: smaller;  line-height: 20px; font-weight: 300;">The VerseGuide Overlay is based on honzapatCZ/gelectron (an open-source game overlay solution for Electron, Qt and CEF) and multiple tools developed by parts of the VerseGuide team (Citizens Pitapa, justMurphy, xabdiben, Graupunkt, StoicMako and LordSkippy).</p>
+                    <p style="font-size: smaller;  line-height: 20px; font-weight: 300;">The VerseGuide Overlay watches Windows processes and tries to inject overlay elements into Star Citizen via DirectX upon launch. It registers hotkeys and simulates keyboard input to execute a command in Global Chat that allows us to retrieve location information via the Windows clipboard.</p>
+
+
+                    <div><p style="font-weight: 300; margin-top: 25px;">MIT License</p></div>
+
+                        <p style="font-size: smaller; font-weight: 300; line-height: 20px;">Permission is hereby granted, free of charge, to any person obtaining a copy
+                        of this software and associated documentation files (the "Software"), to deal
+                        in the Software without restriction, including without limitation the rights
+                        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+                        copies of the Software, and to permit persons to whom the Software is
+                            furnished to do so, subject to the following conditions:</p>
+
+                        <p style="font-size: smaller; font-weight: 300; line-height: 20px;">The above copyright notice and this permission notice shall be included in all
+                            copies or substantial portions of the Software.</p>
+
+                        <p style="font-size: smaller; font-weight: 300; line-height: 20px;">THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+                        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+                        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+                        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+                        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+                        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+                            SOFTWARE.</p>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+
+        <div class="bottom mdl-layout__header-row" style="padding-left: 8px !important;">
+            <!-- Title -->
+            <!-- Right aligned menu below button -->
+            <button id="userMenu"
+                    class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
+                <i class="material-icons" id="userPlaceholder">account_circle</i>
+            </button>
+
+            <ul class="mdl-menu mdl-menu--top-left mdl-js-menu mdl-js-ripple-effect" style="margin-left: 20px; margin-bottom: -20px; padding: 0 !important;"
+                data-mdl-for="userMenu">
+                <li id='show-dialog' class="mdl-menu__item mdl-layout__header-row" style="justify-content: left !important;">
+                    <i class="material-icons">password</i>
+                    <span style="margin-left: 14px;">Log in</span>
+                </li>
+                <li id='help' class="mdl-menu__item mdl-layout__header-row mdl-menu__item--full-bleed-divider" style="justify-content: left !important;">
+                    <i class="material-icons">help_outline</i>
+                    <span style="margin-left: 14px;">Help</span>
+                </li>
+                <li id='logout' class="mdl-menu__item mdl-layout__header-row" style="justify-content: left !important;">
+                        <i class="material-icons">logout</i>
+                        <span style="margin-left: 14px;">Sign out</span>
+                </li>
+            </ul>
+
+            <span id="userSpan" style="margin-left: 10px;">please log in</span>
+
+            <span class = "mdl-layout-spacer"></span>
+
+            <i class="material-icons">settings</i>
+
+        </div>
+
+    <dialog class="mdl-dialog light" style="width: 360px; transform: translateY(65px);">
+        <div class="mdl-dialog__content" style="color: rgba(0,0,0,.8) !important;">
+            <p style="font-size: 18px !important; font-weight: 500 !important;">
+                Connect the Overlay with your VerseGuide.com account …
+            </p>
+            <div class="mdl-textfield mdl-js-textfield">
+                <input class="mdl-textfield__input" type="text" id="user">
+                <label class="mdl-textfield__label" for="user">email address</label>
+            </div>
+            <div class="mdl-textfield mdl-js-textfield">
+                <input class="mdl-textfield__input" type="password" id="pass">
+                <label class="mdl-textfield__label" for="pass">password</label>
+            </div>
+
+            <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" style="margin-top: 10px;" for="stay">
+                <input type="checkbox" id="stay" class="mdl-checkbox__input" checked>
+                <span class="mdl-checkbox__label" style="font-size: 14px; line-height: 14px; color: rgba(0,0,0,.8); font-weight: 500 !important;">remember me</span>
+            </label>
+
+            <p style="margin-bottom: 0; margin-top: 16px;">… you can create an account or reset your password on <a href="https://verseguide.com" target="_blank" style="font-weight: 500;">verseguide.com</a>.</p>
+
+        </div>
+        <div class="mdl-dialog__actions">
+            <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" id='login'>Log in</button>
+            <button type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent close">Cancel</button>
+        </div>
+    </dialog>
+
+    <div id="error" class="mdl-js-snackbar mdl-snackbar">
+        <div class="mdl-snackbar__text"></div>
+        <button class="mdl-snackbar__action" type="button"></button>
     </div>
 
+</div>
+
+
+
+    <script>
+
+        const {
+            ipcRenderer
+        } = window.require('electron')
+
+        const quit = document.getElementById('quitVerseguide')
+        quit.addEventListener('click', () => {
+            ipcRenderer.send('quit')
+        })
+
+        const minimize = document.getElementById('minimizeVerseguide')
+        minimize.addEventListener('click', () => {
+            ipcRenderer.send('minimize')
+        })
+
+        const loginButton = document.getElementById("login")
+        const userName = document.getElementById("user")
+        const passWord = document.getElementById("pass")
+        loginButton.addEventListener("click", () => {
+            const user = userName.value
+            const pass = passWord.value
+            ipcRenderer.send("login", {user: user, pass: pass})
+        })
+
+        const logoutButton = document.getElementById("logout")
+        logoutButton.addEventListener("click", () => {
+            ipcRenderer.send("logout")
+        })
+
+        const getUserButton = document.getElementById("getUser")
+        getUserButton.addEventListener("click", () => {
+            ipcRenderer.send("getUser")
+        })
+
+        const dialog = document.querySelector('dialog');
+        const showDialogButton = document.querySelector('#show-dialog');
+
+        if (! dialog.showModal) {
+            dialogPolyfill.registerDialog(dialog);
+        }
+        showDialogButton.addEventListener('click', function() {
+            dialog.showModal();
+        });
+        dialog.querySelector('.close').addEventListener('click', function() {
+            dialog.close();
+        });
+
+        const userSpan = document.getElementById("userSpan")
+        const userMenu = document.getElementById("userMenu")
+        const userPlaceholder = document.getElementById("userPlaceholder")
+
+        const version = document.getElementById('version');
+        ipcRenderer.send('app_version');
+        ipcRenderer.on('app_version', (event, arg) => {
+            ipcRenderer.removeAllListeners('app_version');
+            version.innerText = arg.version;
+        });
+
+        ipcRenderer.on("user", (event, user) => {
+
+            let userText = 'please log in'
+            let userImage = null
+
+            if (user) {
+                if (user.cHandle && user.cName) {
+                    dialog.close();
+                    if (user.cHandle === user.cName) {
+                        userText = user.cHandle
+                    } else {
+                        userText = user.cName + ' (' + user.cHandle + ')'
+                    }
+                } else if (user.cHandle) {
+                    userText = user.cHandle
+                } else {
+                    userText = 'unknown Citizen'
+                }
+                if (user.cImg) {
+                    userImage = 'https://robertsspaceindustries.com/' + user.cImg
+                } else {
+                    userImage = null
+                }
+            }
+
+            userSpan.innerText = userText
+
+            if (userImage) {
+                userMenu.style.backgroundImage = "url('" + userImage + "')";
+                userPlaceholder.classList.add("none");
+            } else {
+                userMenu.style.backgroundImage = 'none';
+                userPlaceholder.classList.remove("none");
+            }
+
+            const errorContainer = document.querySelector('#error');
+
+        })
+
+        const errorContainer = document.querySelector('#error');
+        ipcRenderer.on("error", (event, error) => {
+            const data = {message: error};
+            errorContainer.MaterialSnackbar.showSnackbar(data);
+        })
+
+
+    </script>
+
     <script src="../renderer/renderer.js"></script>
+
 </body>
 
 </html>

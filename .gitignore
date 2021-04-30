@@ -2,3 +2,5 @@
 .vscode
 .idea/
 /client/dist/main/firebase-config.json
+/client/src/main/utils/firebase.ts
+/client/dist/assets/fonts/

@@ -4,41 +4,89 @@
     <style>
         body {
             overflow: hidden;
-            background-color: rgba(67, 138, 138, 0.25);
             margin: 0px;
-            height: 50px;
-            width: 200px;
+            height: 200px;
+            width: 400px;
         }
-        .caption {
-            height: 50px;
-            width: 200px;
-            background-color: rgba(255, 138, 138, 0.25);
+        .hide {
+            opacity: .33;
+        }
+        .none {
+            display: none !important;
+        }
+        .hide.mdl-badge.mdl-badge--overlap:after {
+            visibility: hidden;
         }
     </style>
-    <title>OsrWindow</title>
+    <title>VerseGuide Status</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.blue_grey-light_blue.min.css" />
+
 </head>
 
 <body>
-    <div>
-        <div class="caption">
-            <button id='button'>intercept</button>  
-            <label id="label">hello</label><br>
-            <input type="text"/>
-        </div>
+    <div style="margin-top:15px;" id="all">
+
+        <span  style="opacity: .75;"><img src="../assets/hotkey.svg" alt="[Alt]+[.]" width="102" height="48" style="margin-right: 16px;"/><span class="material-icons mdl-badge mdl-badge--overlap none hide" style="margin-right: 16px;" data-badge="?" id="counter"><img src="../assets/update.svg" alt="Auto Update" width="36" height="36" /></span><span id="fpsWrapper" style="display: inline-block;"><span class="none" style="border-radius: 7.8674px; padding-left: 8px; padding-right: 8px; font-weight: 500; font-family: Roboto; display: inline-block; line-height: 21.617px; height: 21.617px; background-color:rgba(0,0,0,.33); color: white;" id='fpsLabel'></span></span></span>
+
     </div>
     <script>
-        const label = document.getElementById('label')
+
+        const all = document.getElementById('all')
+        const fps_label = document.getElementById('fpsLabel')
+        const fps_wrapper = document.getElementById('fpsWrapper')
+        const keysim_badge = document.getElementById('counter')
+
+        let total = 0
+
         const {
             ipcRenderer, remote
         } = window.require('electron')
-        ipcRenderer.on("fps", (event, fps) => {
-            label.innerText = `fps: ${fps}`
+
+        ipcRenderer.on("hide", (event, isHidden) => {
+
+            if (isHidden) {
+                all.classList.add("none");
+            } else {
+                all.classList.remove("none");
+            }
+
         })
 
-        const button = document.getElementById('button')
-        button.addEventListener('click', () => {
-            ipcRenderer.send('startIntercept')
+        ipcRenderer.on("showfps", (event, show) => {
+
+            if (show) {
+                fps_wrapper.classList.remove("none");
+            } else {
+                fps_wrapper.classList.add("none");
+            }
+
         })
+
+        ipcRenderer.on("fps", (event, fps) => {
+            if (fps) {fps_label.classList.remove("none");} else {fps_label.classList.add("none");}
+            fps_label.innerText = `${fps} FPS`
+        })
+
+        ipcRenderer.on("keysim", (event, {counter, flag}) => {
+            if (flag === 'disabled') {keysim_badge.classList.add("none");} else {keysim_badge.classList.remove("none");}
+            if (flag === 'stopped') {keysim_badge.classList.add("hide");} else {keysim_badge.classList.remove("hide");}
+
+            let badge = '?'
+            if (flag === 'paused') {badge = '❚❚';} else {badge = counter;}
+
+            keysim_badge.setAttribute("data-badge", badge);
+
+            //if (counter === 0) {total++}
+            //keysim_badge.setAttribute("data-badge", total.toString());
+        })
+
+
     </script>
 </body>
 

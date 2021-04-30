@@ -1,21 +1,34 @@
 {
-    "name": "gelectron",
-    "version": "1.0.0",
-    "main": "./dist/main/main.js",
+    "name": "verseguide",
+    "ProductName": "VerseGuide",
+    "appId": "com.verseguide.overlay",
+    "author": "verseguide.com",
+    "description": "In-game Overlay for Star Citizen connecting to VerseGuide.com Database",
+    "version": "0.4.1",
+    "main": "dist/main/main.js",
     "license": "MIT",
     "scripts": {
         "build:renderer": "webpack --config webpack.config.renderer.js",
         "build:main": "tsc",
         "build": "npm run build:main && npm run build:renderer",
         "lint": "eslint src/**/*.ts",
-        "start": "electron . --enable-logging",
-        "compile:electron": "electron-rebuild -v 11.2.0"
+        "dev": "electron . --enable-logging",
+        "start": "electron-forge start",
+        "compile:electron": "electron-rebuild -v 11.2.0",
+        "package": "electron-forge package",
+        "make": "electron-forge make --targets @electron-forge/maker-zip,@electron-forge/maker-squirrel"
     },
     "devDependencies": {
+        "@electron-forge/cli": "^6.0.0-beta.54",
+        "@electron-forge/maker-deb": "^6.0.0-beta.54",
+        "@electron-forge/maker-rpm": "^6.0.0-beta.54",
+        "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
+        "@electron-forge/maker-zip": "^6.0.0-beta.54",
         "@types/node": "^14.14.22",
         "@typescript-eslint/eslint-plugin": "^2.34.0",
         "@typescript-eslint/parser": "^2.34.0",
         "awesome-typescript-loader": "^5.2.1",
+        "electron": "^11.2.0",
         "electron-rebuild": "^2.3.5",
         "eslint": "^6.8.0",
         "eslint-config-airbnb-base": "^14.2.1",
@@ -26,8 +39,73 @@
         "webpack-cli": "^4.4.0"
     },
     "dependencies": {
-        "electron": "11.2.0",
+        "clipboard-event": "^1.5.0",
+        "electron-acrylic-window": "^0.5.5",
         "electron-overlay": "file:../electron-overlay",
-        "node-ovhook": "file:../node-ovhook"
+        "electron-squirrel-startup": "^1.0.0",
+        "electron-store": "^8.0.0",
+        "ffi-napi": "^4.0.3",
+        "firebase": "^8.4.2",
+        "iohook": "^0.9.0",
+        "keycode": "^2.2.0",
+        "node-ovhook": "file:../node-ovhook",
+        "ntpsync": "^0.2.3",
+        "os": "^0.1.1",
+        "ref-napi": "^3.0.2",
+        "ref-struct-di": "^1.1.1",
+        "wql-process-monitor": "^1.3.2"
+    },
+    "iohook": {
+        "targets": [
+            "node-72",
+            "electron-85"
+        ],
+        "platforms": [
+            "win32"
+        ],
+        "arches": [
+            "x64",
+            "ia32"
+        ]
+    },
+    "config": {
+        "forge": {
+            "packagerConfig": {
+                "icon": "./dist/assets/icon.ico",
+                "appBundleId": "com.verseguide.overlay",
+                "name": "VerseGuide",
+                "productName": "VerseGuide",
+                "title": "VerseGuide",
+                "ignore": [
+                    "^/src"
+                ]
+            },
+            "makers": [
+                {
+                    "name": "@electron-forge/maker-squirrel",
+                    "config": {
+                        "productName": "VerseGuide",
+                        "executableName": "VerseGuide",
+                        "name": "VerseGuide",
+                        "title": "VerseGuide",
+                        "manufacturer": "verseguide.com",
+                        "iconUrl": "https://verseguide.com/favicon.ico",
+                        "setupIcon": "./dist/assets/icon.ico",
+                        "loadingGif": "./dist/assets/install.gif"
+                    }
+                },
+                {
+                    "name": "@electron-forge/maker-zip"
+                },
+                {
+                    "name": "@electron-forge/maker-deb",
+                    "config": {}
+                },
+                {
+                    "name": "@electron-forge/maker-rpm",
+                    "config": {}
+                }
+            ]
+        }
     }
 }

@@ -1,5 +1,6 @@
 import * as path from "path"
 import "./debug"
+import "./firebase"
 
 import { fileUrl } from "./utils"
 
