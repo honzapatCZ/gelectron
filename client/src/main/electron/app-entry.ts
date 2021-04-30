@@ -30,12 +30,12 @@ import 'firebase/auth';
 import 'firebase/firestore';
 
 import {
-  fileUrl
+  fileUrl,
 } from '../utils/utils';
-import CONFIG from "../utils/config";
+import CONFIG from '../utils/config';
 
 const {
-  setVibrancy
+  setVibrancy,
 } = require('electron-acrylic-window');
 
 const ntpsync = require('ntpsync');
@@ -60,38 +60,32 @@ const store = new Store();
 
 // Read userJson from disk and log in
 
-const storedUser = store.get('user')
+const storedUser = store.get('user');
 
 if (storedUser) {
-
   try {
-    const userData = JSON.parse(storedUser)
+    const userData = JSON.parse(storedUser);
 
-    const user: firebase.User = new(firebase as any).User(userData, userData.stsTokenManager, userData)
+    const user: firebase.User = new (firebase as any).User(userData, userData.stsTokenManager, userData);
     firebase.auth().updateCurrentUser(user)
-        .then(() => {
-          console.log('user updated')
-        })
-        .catch((error) => {
-          console.log(error)
-          // Set userJson on disk to null
-          store.set('user', null);
+      .then(() => {
+        console.log('user updated');
+      })
+      .catch((error) => {
+        console.log(error);
+        // Set userJson on disk to null
+        store.set('user', null);
 
-          firebase.auth().signOut().then(() => {
-            console.log('signed out')
-          }).catch((error2) => {
-            console.log(error2)
-          });
-
+        firebase.auth().signOut().then(() => {
+          console.log('signed out');
+        }).catch((error2) => {
+          console.log(error2);
         });
-
+      });
   } catch (e) {
-    console.log(e)
+    console.log(e);
   }
-
 }
-
-
 
 console.log();
 
@@ -151,14 +145,14 @@ entry.dwExtraInfo = 0;
 export function KeyToggle(keyCode: any, type = 'down' as 'down' | 'up', options?: Partial<KeyToggle_Options>) {
   const opt = {
     ...new KeyToggle_Options(),
-    ...options
+    ...options,
   };
 
   // scan-code approach (default)
   if (opt.asScanCode) {
     const scanCode = opt.keyCodeIsScanCode ? keyCode : user32.MapVirtualKeyW(keyCode, 0); // this should work, but it had a Win32 error (code 127) for me
     // let scanCode = opt.keyCodeIsScanCode ? keyCode : ConvertKeyCodeToScanCode(keyCode);
-    const isExtendedKey = (scanCode & extendedKeyPrefix) == extendedKeyPrefix;
+    const isExtendedKey = (scanCode & extendedKeyPrefix) === extendedKeyPrefix;
 
     entry.dwFlags = KEYEVENTF_SCANCODE;
     if (isExtendedKey) {
@@ -183,7 +177,7 @@ export function KeyToggle(keyCode: any, type = 'down' as 'down' | 'up', options?
   if (opt.flags != null) {
     entry.dwFlags = opt.flags;
   }
-  if (type == 'up') {
+  if (type === 'up') {
     entry.dwFlags |= KEYEVENTF_KEYUP;
   }
 
@@ -198,7 +192,7 @@ export function KeyToggle(keyCode: any, type = 'down' as 'down' | 'up', options?
   return user32.SendInput(1, entry, arch === 'x64' ? 40 : 28);
 }
 
-export function KeyTap(keyCode: any, opt ? : Partial < KeyToggle_Options > ) {
+export function KeyTap(keyCode: any, opt ? : Partial < KeyToggle_Options >) {
   KeyToggle(keyCode, 'down', opt);
   KeyToggle(keyCode, 'up', opt);
 }
@@ -210,13 +204,9 @@ const keys = "**1234567890-=**qwertyuiop[]**asdfghjkl;'`*\\zxcvbnm,./".split('')
 export function ConvertKeyCodeToScanCode(keyCode: number) {
   const keyChar = String.fromCharCode(keyCode).toLowerCase();
   const result = keys.indexOf(keyChar);
-  console.assert(result != -1, `Could not find scan-code for key ${keyCode} (${keycode.names[keyCode]}).`);
+  console.assert(result !== -1, `Could not find scan-code for key ${keyCode} (${keycode.names[keyCode]}).`);
   return result;
 }
-
-
-
-
 
 //
 /// ////////////////////////////////////////////////////////
@@ -226,9 +216,9 @@ let toggleHide = false;
 let toggleFPS = true;
 // counter for auto keypress injection
 let counter = 5; // start counter (5 seconds)
-let counterReset = 60; // min counter value for auto update (1 minute)
+const counterReset = 60; // min counter value for auto update (1 minute)
 let flag = 'disabled';
-let timeDelta = 0
+let timeDelta = 0;
 
 enum AppWindows {
   main = 'main',
@@ -236,7 +226,6 @@ enum AppWindows {
   osrpopup = 'osrpopup',
   splash = 'splashSCreen'
 }
-
 
 class Application {
   private windows: Map < string, Electron.BrowserWindow >
@@ -251,7 +240,7 @@ class Application {
 
   private Dimensions = {
     width: 1920,
-    height: 1080
+    height: 1080,
   }
 
   constructor() {
@@ -313,15 +302,13 @@ class Application {
   }
 
   public listenToUser() {
-
-    let self = this
+    const self = this;
 
     firebase.auth().onAuthStateChanged((user) => {
-
       const window = self.getWindow(AppWindows.main);
 
       if (user && user.uid) {
-        console.log('USER CHANGE', user.uid)
+        console.log('USER CHANGE', user.uid);
 
         const docRef = db.collection('users').doc(user.uid);
 
@@ -332,19 +319,17 @@ class Application {
             if (window) {
               window.webContents.send('user', doc.data());
             }
-
           } else {
             // doc.data() will be undefined in this case
-            console.log("No such document!");
+            console.log('No such document!');
 
             if (window) {
               window.webContents.send('user', null);
               window.webContents.send('error', 'profile not found');
             }
-
           }
         }).catch((error) => {
-          console.log("Error getting document:", error);
+          console.log('Error getting document:', error);
 
           if (window) {
             window.webContents.send('user', null);
@@ -355,9 +340,8 @@ class Application {
             }
           }
         });
-
       } else {
-        console.log('logged out')
+        console.log('logged out');
 
         if (window) {
           window.webContents.send('user', null);
@@ -365,7 +349,6 @@ class Application {
         }
       }
     });
-
   }
 
   public listenToClipboard() {
@@ -383,7 +366,7 @@ class Application {
       if (window) {
         window.webContents.send('clipboard', {
           timestamp,
-          coordinates
+          coordinates,
         });
       }
     });
@@ -402,14 +385,14 @@ class Application {
         if (counter < 5) {
           counter = 5;
           if (flag === 'enabled') {
-            flag = 'paused'
+            flag = 'paused';
           }
         }
         const window = self.getWindow('StatusBar');
         if (window) {
           window.webContents.send('keysim', {
             counter,
-            flag
+            flag,
           });
         }
       }
@@ -426,7 +409,7 @@ class Application {
       let buf;
       let name;
       let
-          ret;
+        ret;
       buf = new Buffer(255);
       ret = user32.GetWindowTextA(user32.GetForegroundWindow(), buf, 255);
       name = ref.readCString(buf, 0);
@@ -442,13 +425,12 @@ class Application {
         counter--;
       }
 
-
       // send counter to statusbar
       const window = self.getWindow('StatusBar');
       if (window) {
         window.webContents.send('keysim', {
           counter,
-          flag
+          flag,
         });
       }
 
@@ -456,54 +438,54 @@ class Application {
       if (name === 'Star Citizen') {
         if (counter === 0) {
           KeyTap(13, {
-            asScanCode: true
+            asScanCode: true,
           }); // 'enter' (in game)
 
           setTimeout(() => {
             KeyTap('/', {
-              asKeyStroke: true
+              asKeyStroke: true,
             }); // '/' (forward slash)
             KeyTap('s', {
-              asKeyStroke: true
+              asKeyStroke: true,
             });
             KeyTap('h', {
-              asKeyStroke: true
+              asKeyStroke: true,
             });
             KeyTap('o', {
-              asKeyStroke: true
+              asKeyStroke: true,
             });
             KeyTap('w', {
-              asKeyStroke: true
+              asKeyStroke: true,
             });
             KeyTap('l', {
-              asKeyStroke: true
+              asKeyStroke: true,
             });
             KeyTap('o', {
-              asKeyStroke: true
+              asKeyStroke: true,
             });
             KeyTap('c', {
-              asKeyStroke: true
+              asKeyStroke: true,
             });
             KeyTap('a', {
-              asKeyStroke: true
+              asKeyStroke: true,
             });
             KeyTap('t', {
-              asKeyStroke: true
+              asKeyStroke: true,
             });
             KeyTap('i', {
-              asKeyStroke: true
+              asKeyStroke: true,
             });
             KeyTap('o', {
-              asKeyStroke: true
+              asKeyStroke: true,
             });
             KeyTap('n', {
-              asKeyStroke: true
+              asKeyStroke: true,
             });
           }, 100); // delay needed after chat activation
 
           setTimeout(() => {
             KeyTap(13, {
-              asScanCode: true
+              asScanCode: true,
             }); // 'enter' (in chat)
           }, 200); // delay needed after typing to send chat
 
@@ -568,14 +550,14 @@ class Application {
       },
     };
     const mainWindow = this.createWindow(AppWindows.main, options);
-    setVibrancy(mainWindow)
+    setVibrancy(mainWindow);
     this.mainWindow = mainWindow;
     return mainWindow;
   }
 
   public openMainWindow() {
     let {
-      mainWindow
+      mainWindow,
     } = this;
     if (!mainWindow) {
       mainWindow = this.createMainWindow();
@@ -586,7 +568,7 @@ class Application {
 
   public closeMainWindow() {
     const {
-      mainWindow
+      mainWindow,
     } = this;
     if (mainWindow) {
       mainWindow.close();
@@ -600,32 +582,32 @@ class Application {
       name: 'hide.toggle',
       keyCode: 188,
       modifiers: {
-        alt: true
-      }
-    }, //Alt+[,] hide overlay
-      {
-        name: 'overlay.toggle',
-        keyCode: 190,
-        modifiers: {
-          alt: true
-        }
-      }, // Alt+[.] show settings
-      {
-        name: 'hide.toggleAlt',
-        keyCode: 188,
-        modifiers: {
-          alt: true,
-          ctrl: true
-        }
-      }, //AltGr+[,] hide overlay (Alt-Gr alternative)
-      {
-        name: 'overlay.toggleAlt',
-        keyCode: 190,
-        modifiers: {
-          alt: true,
-          ctrl: true
-        }
-      }, // AltGr+[.] show settings (Alt-Gr alternative)
+        alt: true,
+      },
+    }, // Alt+[,] hide overlay
+    {
+      name: 'overlay.toggle',
+      keyCode: 190,
+      modifiers: {
+        alt: true,
+      },
+    }, // Alt+[.] show settings
+    {
+      name: 'hide.toggleAlt',
+      keyCode: 188,
+      modifiers: {
+        alt: true,
+        ctrl: true,
+      },
+    }, // AltGr+[,] hide overlay (Alt-Gr alternative)
+    {
+      name: 'overlay.toggleAlt',
+      keyCode: 190,
+      modifiers: {
+        alt: true,
+        ctrl: true,
+      },
+    }, // AltGr+[.] show settings (Alt-Gr alternative)
     ]);
 
     /*
@@ -717,28 +699,28 @@ class Application {
   }
 
   public addOverlayWindow(
-      name: string,
-      window: Electron.BrowserWindow,
-      dragborder: number = 0,
-      captionHeight: number = 0,
-      transparent: boolean = false,
-      alwaysOnTop: boolean = false,
-      alwaysIgnoreInput: boolean = false,
+    name: string,
+    window: Electron.BrowserWindow,
+    dragborder: number = 0,
+    captionHeight: number = 0,
+    transparent: boolean = false,
+    alwaysOnTop: boolean = false,
+    alwaysIgnoreInput: boolean = false,
   ) {
     const display = screen.getDisplayNearestPoint(
-        screen.getCursorScreenPoint(),
+      screen.getCursorScreenPoint(),
     );
 
     this.Overlay!.addWindow(window.id, {
       name,
       transparent,
       resizable: window.isResizable(),
-      maxWidth: window.isResizable ?
-          display.bounds.width :
-          window.getBounds().width,
-      maxHeight: window.isResizable ?
-          display.bounds.height :
-          window.getBounds().height,
+      maxWidth: window.isResizable
+        ? display.bounds.width
+        : window.getBounds().width,
+      maxHeight: window.isResizable
+        ? display.bounds.height
+        : window.getBounds().height,
       minWidth: window.isResizable ? 100 : window.getBounds().width,
       minHeight: window.isResizable ? 100 : window.getBounds().height,
       nativeHandle: window.getNativeWindowHandle().readUInt32LE(0),
@@ -757,18 +739,18 @@ class Application {
     });
 
     window.webContents.on(
-        'paint',
-        (event, dirty, image: Electron.NativeImage) => {
-          if (this.markQuit) {
-            return;
-          }
+      'paint',
+      (event, dirty, image: Electron.NativeImage) => {
+        if (this.markQuit) {
+          return;
+        }
           this.Overlay!.sendFrameBuffer(
-              window.id,
-              image.getBitmap(),
-              image.getSize().width,
-              image.getSize().height,
+            window.id,
+            image.getBitmap(),
+            image.getSize().width,
+            image.getSize().height,
           );
-        },
+      },
     );
 
     window.on('ready-to-show', () => {
@@ -777,13 +759,13 @@ class Application {
 
     window.on('resize', () => {
       this.Overlay!.sendWindowBounds(window.id, {
-        rect: window.getBounds()
+        rect: window.getBounds(),
       });
     });
 
     window.on('move', () => {
       this.Overlay!.sendWindowBounds(window.id, {
-        rect: window.getBounds()
+        rect: window.getBounds(),
       });
     });
 
@@ -835,7 +817,7 @@ class Application {
       if (cursor) {
         this.Overlay!.sendCommand({
           command: 'cursor',
-          cursor
+          cursor,
         });
       }
     });
@@ -891,7 +873,7 @@ class Application {
     //   mode: "detach"
     // })
     window.loadURL(
-        fileUrl(path.join(global.CONFIG.distDir, 'index/location.html')),
+      fileUrl(path.join(global.CONFIG.distDir, 'index/location.html')),
     );
 
     this.addOverlayWindow(name, window, 0, 0, true, true);
@@ -921,20 +903,20 @@ class Application {
     //   mode: "detach"
     // })
     window.loadURL(
-        fileUrl(path.join(global.CONFIG.distDir, 'index/statusbar.html')),
+      fileUrl(path.join(global.CONFIG.distDir, 'index/statusbar.html')),
     );
 
     // this makes this particular overlay show as preview in the companion app
     window.webContents.on(
-        'paint',
-        (event, dirty, image: Electron.NativeImage) => {
-          if (this.markQuit) {
-            return;
-          }
+      'paint',
+      (event, dirty, image: Electron.NativeImage) => {
+        if (this.markQuit) {
+          return;
+        }
           this.mainWindow!.webContents.send('osrImage', {
             image: image.toDataURL(),
           });
-        },
+      },
     );
 
     this.addOverlayWindow(name, window, 0, 0, true, true);
@@ -964,7 +946,7 @@ class Application {
     //   mode: "detach"
     // })
     window.loadURL(
-        fileUrl(path.join(global.CONFIG.distDir, 'index/osrtip.html')),
+      fileUrl(path.join(global.CONFIG.distDir, 'index/osrtip.html')),
     );
 
     this.addOverlayWindow(name, window, 30, 40, true);
@@ -1005,7 +987,7 @@ class Application {
   public setupSystemTray() {
     if (!this.tray) {
       this.tray = new Tray(
-          path.join(global.CONFIG.distDir, 'assets/icon-16.png'),
+        path.join(global.CONFIG.distDir, 'assets/icon-16.png'),
       );
       const contextMenu = Menu.buildFromTemplate([{
         label: 'Open',
@@ -1013,18 +995,18 @@ class Application {
           this.showAndFocusWindow(AppWindows.main);
         },
       },
-        {
-          label: 'Minimize',
-          click: () => {
-            this.hideWindow(AppWindows.main);
-          },
+      {
+        label: 'Minimize',
+        click: () => {
+          this.hideWindow(AppWindows.main);
         },
-        {
-          label: 'Exit',
-          click: () => {
-            this.quit();
-          },
+      },
+      {
+        label: 'Exit',
+        click: () => {
+          this.quit();
         },
+      },
       ]);
       this.tray.setToolTip('VerseGuide');
       this.tray.setContextMenu(contextMenu);
@@ -1070,13 +1052,12 @@ class Application {
 
     this.injectOverlay();
 
-    let self = this
+    const self = this;
 
-    //sync NTP time (find delta to system time) every hour
-    setInterval(function() {
+    // sync NTP time (find delta to system time) every hour
+    setInterval(() => {
       self.syncNTPtime();
     }, 3600000);
-
   }
 
   public activate() {
@@ -1090,13 +1071,13 @@ class Application {
         flag = 'enabled';
         window.webContents.send('keysim', {
           counter: 6,
-          flag: 'enabled'
+          flag: 'enabled',
         });
       } else {
         flag = 'disabled';
         window.webContents.send('keysim', {
           counter: 6,
-          flag: 'disabled'
+          flag: 'disabled',
         });
       }
     }
@@ -1144,11 +1125,10 @@ class Application {
   }
 
   public minimize() {
-
-    console.log('minimize')
+    console.log('minimize');
 
     const {
-      mainWindow
+      mainWindow,
     } = this;
     if (mainWindow) {
       mainWindow.hide();
@@ -1166,8 +1146,8 @@ class Application {
   }
 
   private createWindow(
-      name: string,
-      option: Electron.BrowserWindowConstructorOptions,
+    name: string,
+    option: Electron.BrowserWindowConstructorOptions,
   ) {
     const window = new BrowserWindow(option);
     this.windows.set(name, window);
@@ -1181,12 +1161,12 @@ class Application {
 
     if (global.DEBUG) {
       window.webContents.on(
-          'before-input-event',
-          (event: Electron.Event, input: Electron.Input) => {
-            if (input.key === 'F12' && input.type === 'keyDown') {
-              window.webContents.openDevTools();
-            }
-          },
+        'before-input-event',
+        (event: Electron.Event, input: Electron.Input) => {
+          if (input.key === 'F12' && input.type === 'keyDown') {
+            window.webContents.openDevTools();
+          }
+        },
       );
     }
 
@@ -1194,17 +1174,16 @@ class Application {
   }
 
   public injectOverlay() {
-
     if (!this.OvHook) {
       this.OvHook = require('node-ovhook');
     }
 
     // check if Electron processs is elevated
-    let elevated = false
+    let elevated = false;
     const childProcess = require('child_process');
     try {
-      childProcess.execFileSync("net", ["session"], {
-        "stdio": "ignore"
+      childProcess.execFileSync('net', ['session'], {
+        stdio: 'ignore',
       });
 
       elevated = true;
@@ -1215,10 +1194,9 @@ class Application {
     // console.log(this.OvHook.getTopWindows())
     for (const window of this.OvHook.getTopWindows()) {
       if (window && window.executable && (window.executable.endsWith('\\LIVE\\Bin64\\StarCitizen.exe') || window.executable.endsWith('\\PTU\\Bin64\\StarCitizen.exe')) && window.title && window.title === 'Star Citizen') {
-
-        console.log(' found Star Citizen process:', window.executable)
-        console.log(` processId: ${window.processId}, threadId: ${window.threadId}, admin: ${window.admin}, title: ${window.title}\n--------------------`)
-        console.log(` am I elevated? ${elevated}\n--------------------`)
+        console.log(' found Star Citizen process:', window.executable);
+        console.log(` processId: ${window.processId}, threadId: ${window.threadId}, admin: ${window.admin}, title: ${window.title}\n--------------------`);
+        console.log(` am I elevated? ${elevated}\n--------------------`);
 
         this.OvHook.injectProcess(window, {
           dllPath: path.join(global.CONFIG.distDir, 'overlay/n_overlay.dll'),
@@ -1226,10 +1204,8 @@ class Application {
           helper: path.join(global.CONFIG.distDir, 'overlay/n_ovhelper.exe'),
           helper64: path.join(global.CONFIG.distDir, 'overlay/n_ovhelper.x64.exe'),
         });
-
       }
     }
-
   }
 
   private setupIpc() {
@@ -1245,12 +1221,11 @@ class Application {
       //      if (!this.OvHook) {
       //        this.OvHook = require('node-ovhook');
       //      }
-
     });
 
     ipcMain.on('app_version', (event) => {
       event.sender.send('app_version', {
-        version: app.getVersion()
+        version: app.getVersion(),
       });
     });
 
@@ -1264,72 +1239,66 @@ class Application {
 
     ipcMain.on('login', (event, {
       user,
-      pass
+      pass,
     }) => {
-
-      let self = this
+      const self = this;
 
       firebase.auth().signInWithEmailAndPassword(user, pass)
-          .then((userCredential) => {
+        .then((userCredential) => {
+          // Write userJson to disk
+          const currentUser = userCredential.user;
+          store.set('user', JSON.stringify(currentUser.toJSON()));
+        })
+        .catch((error) => {
+          console.log(error);
 
-            // Write userJson to disk
-            const currentUser = userCredential.user
-            store.set('user', JSON.stringify(currentUser.toJSON()));
+          const window = self.getWindow(AppWindows.main);
+          if (window) {
+            if (error && error.message) {
+              window.webContents.send('error', error.message);
+            } else if (error && error.code) {
+              window.webContents.send('error', error.code);
+            }
+          }
 
-          })
-          .catch((error) => {
+          // Set userJson on disk to null
+          store.set('user', null);
 
-            console.log(error)
+          firebase.auth().signOut().then(() => {
+            console.log('signed out');
+          }).catch((error2) => {
+            console.log(error2);
 
             const window = self.getWindow(AppWindows.main);
             if (window) {
-              if (error && error.message) {
-                window.webContents.send('error', error.message);
-              } else if (error && error.code) {
-                window.webContents.send('error', error.code);
+              if (error2 && error2.message) {
+                window.webContents.send('error', error2.message);
+              } else if (error2 && error2.code) {
+                window.webContents.send('error', error2.code);
               }
             }
-
-            // Set userJson on disk to null
-            store.set('user', null);
-
-            firebase.auth().signOut().then(() => {
-              console.log('signed out')
-            }).catch((error2) => {
-              console.log(error2)
-
-              const window = self.getWindow(AppWindows.main);
-              if (window) {
-                if (error2 && error2.message) {
-                  window.webContents.send('error', error2.message);
-                } else if (error2 && error2.code) {
-                  window.webContents.send('error', error2.code);
-                }
-              }
-            });
-
           });
-
+        });
     });
 
     ipcMain.on('getUser', () => {
-      var user = firebase.auth().currentUser;
+      const user = firebase.auth().currentUser;
 
       if (user) {
-        console.log(user)
+        console.log(user);
       } else {
-        console.log('no user')
+        console.log('no user');
       }
     });
 
     ipcMain.on('logout', () => {
-      let self = this
+      const self = this;
 
-      store.set('user', null)
+      store.set('user', null);
       firebase.auth().signOut().then(() => {
-        console.log('signed out')
+        console.log('signed out');
       }).catch((error) => {
-        console.log(error)
+        console.log(error);
 
         const window = self.getWindow(AppWindows.main);
         if (window) {
@@ -1351,8 +1320,7 @@ class Application {
       }
       console.log('--------------------');
 
-      this.injectOverlay()
-
+      this.injectOverlay();
     });
 
     ipcMain.on('osrClick', () => {
@@ -1419,7 +1387,7 @@ class Application {
     this.closeWindow(name);
 
     const display = screen.getDisplayNearestPoint(
-        screen.getCursorScreenPoint(),
+      screen.getCursorScreenPoint(),
     );
 
     const window = this.createWindow(name, {
@@ -1441,7 +1409,7 @@ class Application {
     // window.webContents.openDevTools({mode: "detach"})
 
     window.loadURL(
-        fileUrl(path.join(global.CONFIG.distDir, 'doit/index.html')),
+      fileUrl(path.join(global.CONFIG.distDir, 'doit/index.html')),
     );
   }
 
@@ -1450,7 +1418,7 @@ class Application {
     const wasOpen = this.closeWindow(name);
 
     const display = screen.getDisplayNearestPoint(
-        screen.getCursorScreenPoint(),
+      screen.getCursorScreenPoint(),
     );
 
     if (!wasOpen) {
@@ -1475,12 +1443,12 @@ class Application {
       // window.webContents.openDevTools({mode: "detach"})
 
       window.loadURL(
-          fileUrl(path.join(global.CONFIG.distDir, 'index/daylight.html')),
+        fileUrl(path.join(global.CONFIG.distDir, 'index/daylight.html')),
       );
     }
   }
 }
 
 export {
-  Application
+  Application,
 };
