@@ -46,7 +46,7 @@
         "electron-store": "^8.0.0",
         "ffi-napi": "^4.0.3",
         "firebase": "^8.4.2",
-        "iohook": "^0.9.0",
+        "iohook": "^0.9.1",
         "keycode": "^2.2.0",
         "node-ovhook": "file:../node-ovhook",
         "ntpsync": "^0.2.3",

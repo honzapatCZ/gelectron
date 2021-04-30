@@ -148,8 +148,7 @@ const entry = new Input(); // having one persistent native object, and just chan
 entry.type = INPUT_KEYBOARD;
 entry.time = 0;
 entry.dwExtraInfo = 0;
-export function KeyToggle(keyCode: any, type = 'down'
-as 'down' | 'up', options ? : Partial < KeyToggle_Options > ) {
+export function KeyToggle(keyCode: any, type = 'down' as 'down' | 'up', options?: Partial<KeyToggle_Options>) {
   const opt = {
     ...new KeyToggle_Options(),
     ...options
