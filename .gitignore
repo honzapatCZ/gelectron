@@ -4,4 +4,4 @@
 /client/src/main/utils/firebase.ts
 /client/dist/assets/fonts/
 /client/out/
-/client/forge.publishers.js
+/client/forge.config.js

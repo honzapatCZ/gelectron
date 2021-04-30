@@ -71,36 +71,6 @@
         ]
     },
     "config": {
-        "forge": {
-            "publishers": "./forge.publishers.js",
-            "packagerConfig": {
-                "icon": "./dist/assets/icon.ico",
-                "appBundleId": "com.verseguide.overlay",
-                "name": "VerseGuide",
-                "productName": "VerseGuide",
-                "title": "VerseGuide",
-                "ignore": [
-                    "^/src"
-                ]
-            },
-            "makers": [
-                {
-                    "name": "@electron-forge/maker-squirrel",
-                    "config": {
-                        "productName": "VerseGuide",
-                        "executableName": "VerseGuide",
-                        "name": "VerseGuide",
-                        "title": "VerseGuide",
-                        "manufacturer": "verseguide.com",
-                        "iconUrl": "https://verseguide.com/favicon.ico",
-                        "setupIcon": "./dist/assets/icon.ico",
-                        "loadingGif": "./dist/assets/install.gif"
-                    }
-                },
-                {
-                    "name": "@electron-forge/maker-zip"
-                }
-            ]
-        }
+        "forge": "./forge.config.js"
     }
 }
