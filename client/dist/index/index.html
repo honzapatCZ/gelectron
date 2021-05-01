@@ -44,6 +44,30 @@
             background-color: rgba(0,0,0,0);
         }
 
+        .fancyOverflow {
+            overflow: auto;
+        }
+
+        .fancyOverflow::-webkit-scrollbar {
+            width: 14px;
+        }
+        .fancyOverflow::-webkit-scrollbar-corner {
+            background: rgba(0,0,0,0);
+        }
+        .fancyOverflow::-webkit-scrollbar-thumb {
+            background-color: rgba(0, 0, 0, 0.33);
+            border-top: 8px solid rgba(0,0,0,0);
+            border-bottom: 8px solid rgba(0,0,0,0);
+            border-left: 0;
+            border-right: 6px solid rgba(0,0,0,0);
+            background-clip: content-box;
+            min-width: 14px;
+            min-height: 32px;
+        }
+        .fancyOverflow::-webkit-scrollbar-track {
+            background-color: rgba(0,0,0,0);
+        }
+
         img, a {
             user-select: none;
             -webkit-user-drag: none;
@@ -133,6 +157,11 @@
             overflow: hidden;
         }
 
+        .mdl-dialog.dark {
+            background-color: rgba(20,20,20,1) !important;
+            border-radius: 0 !important;
+        }
+
         .mdl-menu, .mdl-menu__outline {
             border-radius: 2px !important;
             overflow: hidden;
@@ -146,6 +175,12 @@
         .bottom .mdl-menu__outline {
             margin-left: 20px;
             margin-top: 20px;
+        }
+
+        .bottom .right .mdl-menu__outline {
+            margin-left: -24px;
+            margin-right: 24px;
+            margin-top: 4px;
         }
 
         .mdl-menu__item {
@@ -309,19 +344,7 @@
 
                 </ul>
 
-                <button id="demo-menu-debug" style="-webkit-app-region: no-drag; border-radius: 0 !important; opacity: .2;"
-                        class="mdl-button mdl-js-button mdl-button--icon">
-                    <i class="material-icons">bug_report</i>
-                </button>
 
-
-                <ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" style="-webkit-app-region: no-drag; margin-left: 16px; margin-top: -16px; padding: 0 !important;"
-                    data-mdl-for="demo-menu-debug">
-                    <li id='start' class="mdl-menu__item">Create widgets</li>
-                    <li id='inject' class="mdl-menu__item">Inject overlay</li>
-                    <li id='getUser' class="mdl-menu__item mdl-menu__item--full-bleed-divider">Fetch current user</li>
-                    <li class="mdl-menu__item">Log files</li>
-                </ul>
 
                 <div class = "mdl-layout-spacer"></div>
 
@@ -424,7 +447,7 @@
     </main>
 
 
-        <div class="bottom mdl-layout__header-row" style="padding-left: 8px !important;">
+        <div class="bottom mdl-layout__header-row" style="padding-left: 8px !important; padding-right: 8px !important;">
             <!-- Title -->
             <!-- Right aligned menu below button -->
             <button id="userMenu"
@@ -434,7 +457,7 @@
 
             <ul class="mdl-menu mdl-menu--top-left mdl-js-menu mdl-js-ripple-effect" style="margin-left: 20px; margin-bottom: -20px; padding: 0 !important;"
                 data-mdl-for="userMenu">
-                <li id='show-dialog' class="mdl-menu__item mdl-layout__header-row" style="justify-content: left !important;">
+                <li id='show-user' class="mdl-menu__item mdl-layout__header-row" style="justify-content: left !important;">
                     <i class="material-icons">password</i>
                     <span style="margin-left: 14px;">Log in</span>
                 </li>
@@ -452,11 +475,25 @@
 
             <span class = "mdl-layout-spacer"></span>
 
+            <div class="right">
+
+            <button id="demo-menu-config" class="mdl-button mdl-js-button mdl-button--icon">
             <i class="material-icons">settings</i>
+            </button>
+
+            <ul class="mdl-menu mdl-menu--top-right mdl-js-menu mdl-js-ripple-effect" style="margin-left: -24px; margin-right: 24px; margin-bottom: -4px; padding: 0 !important;"
+                data-mdl-for="demo-menu-config">
+                <li class="mdl-menu__item">Help</li>
+                <li id='show-debug' class="mdl-menu__item">Debug</li>
+                <li id='show-log' class="mdl-menu__item mdl-menu__item--full-bleed-divider">Log</li>
+                <li class="mdl-menu__item">Settings</li>
+            </ul>
+
+            </div>
 
         </div>
 
-    <dialog class="mdl-dialog light" style="width: 360px; transform: translateY(65px);">
+    <dialog id='userDialog' class="mdl-dialog light" style="width: 360px; transform: translateY(65px);">
         <div class="mdl-dialog__content" style="color: rgba(0,0,0,.8) !important;">
             <p style="font-size: 18px !important; font-weight: 500 !important;">
                 Connect the Overlay with your VerseGuide.com account …
@@ -483,6 +520,80 @@
             <button type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent close">Cancel</button>
         </div>
     </dialog>
+
+
+    <dialog id='debugDialog' class="mdl-dialog dark" style="width: 100%; bottom:0; top: 200px; height: 648px;">
+        <div class="mdl-dialog__content" style="color: rgba(255,255,255,.8) !important;">
+
+
+
+            <div class="top mdl-layout__header-row" style="padding: 0 !important; background-color: rgba(0,0,0,.33);">
+
+
+                    <span style="font-size: 14px !important; font-weight: 500 !important; margin-left: 16px;">
+                        Debug Terminal
+                    </span>
+
+
+                <div class = "mdl-layout-spacer"></div>
+
+                <button style="-webkit-app-region: no-drag;  border-radius: 0 !important;"
+                        class="mdl-button mdl-js-button mdl-button--icon close">
+                    <i class="material-icons">close</i>
+                </button>
+
+
+            </div>
+
+            <div style="margin-top: 32px;">
+                <button id='start' type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create widgets</button>
+            </div>
+            <div style="margin-top: 32px;">
+                <button id='inject' type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Inject overlay</button>
+            </div>
+            <div style="margin-top: 32px;">
+                <button id='getUser' type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Fetch current user</button>
+            </div>
+            <div style="margin-top: 32px;">
+                <button id='stopMonitor' type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Stop Process Monitoring</button>
+            </div>
+
+        </div>
+
+    </dialog>
+
+
+    <dialog id='logDialog' class="mdl-dialog dark" style="width: 100%; bottom:0; top: 200px; height: 648px;">
+        <div class="mdl-dialog__content" style="color: rgba(255,255,255,.8) !important;">
+
+
+
+            <div class="top mdl-layout__header-row" style="padding: 0 !important; background-color: rgba(0,0,0,.33);">
+
+
+                    <span style="font-size: 14px !important; font-weight: 500 !important; margin-left: 16px;">
+                        Log output
+                    </span>
+
+
+                <div class = "mdl-layout-spacer"></div>
+
+                <button style="-webkit-app-region: no-drag;  border-radius: 0 !important;"
+                        class="mdl-button mdl-js-button mdl-button--icon close">
+                    <i class="material-icons">close</i>
+                </button>
+
+
+            </div>
+
+
+            <div id="logfile" style="color: rgba(255,255,255,.5) !important; white-space: pre-wrap; position: absolute; left: 0; top:32px; bottom: 0; right: 0; padding: 16px;" class="fancyOverflow"></div>
+
+
+        </div>
+
+    </dialog>
+
 
     <div id="error" class="mdl-js-snackbar mdl-snackbar">
         <div class="mdl-snackbar__text"></div>
@@ -528,18 +639,46 @@
             ipcRenderer.send("getUser")
         })
 
-        const dialog = document.querySelector('dialog');
-        const showDialogButton = document.querySelector('#show-dialog');
+        const userDialog = document.getElementById('userDialog');
+        const showUserButton = document.querySelector('#show-user');
 
-        if (! dialog.showModal) {
-            dialogPolyfill.registerDialog(dialog);
+        if (! userDialog.showModal) {
+            dialogPolyfill.registerDialog(userDialog);
         }
-        showDialogButton.addEventListener('click', function() {
-            dialog.showModal();
+        showUserButton.addEventListener('click', function() {
+            userDialog.showModal();
         });
-        dialog.querySelector('.close').addEventListener('click', function() {
-            dialog.close();
+        userDialog.querySelector('.close').addEventListener('click', function() {
+            userDialog.close();
         });
+
+        const debugDialog = document.getElementById('debugDialog');
+        const showDebugButton = document.querySelector('#show-debug');
+
+        if (! debugDialog.showModal) {
+            dialogPolyfill.registerDialog(debugDialog);
+        }
+        showDebugButton.addEventListener('click', function() {
+            debugDialog.showModal();
+        });
+        debugDialog.querySelector('.close').addEventListener('click', function() {
+            debugDialog.close();
+        });
+
+
+        const logDialog = document.getElementById('logDialog');
+        const showLogButton = document.querySelector('#show-log');
+
+        if (! logDialog.showModal) {
+            dialogPolyfill.registerDialog(logDialog);
+        }
+        showLogButton.addEventListener('click', function() {
+            logDialog.showModal();
+        });
+        logDialog.querySelector('.close').addEventListener('click', function() {
+            logDialog.close();
+        });
+
 
         const userSpan = document.getElementById("userSpan")
         const userMenu = document.getElementById("userMenu")
@@ -552,6 +691,8 @@
             version.innerText = arg.version;
         });
 
+
+
         ipcRenderer.on("user", (event, user) => {
 
             let userText = 'please log in'
@@ -559,7 +700,7 @@
 
             if (user) {
                 if (user.cHandle && user.cName) {
-                    dialog.close();
+                    userDialog.close();
                     if (user.cHandle === user.cName) {
                         userText = user.cHandle
                     } else {

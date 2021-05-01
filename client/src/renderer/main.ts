@@ -5,8 +5,41 @@ import {
   IpcRendererEvent
 } from "electron/main"
 
+
+function getArrayWithLimitedLength(length) {
+  let array = new Array();
+
+  array.push = function () {
+    if (this.length >= length) {
+      this.shift();
+    }
+    return Array.prototype.push.apply(this, arguments);
+  }
+
+  return array;
+
+}
+
+let logArray = getArrayWithLimitedLength(100);
+
+const logfile = document.getElementById('logfile')
+ipcRenderer.on('append_log', (event, entry) => {
+
+  logArray.push(Date.now() + ' - ' + entry)
+  logfile.innerText = logArray.join("\r\n")
+  logfile.scrollTop = logfile.scrollHeight;
+
+});
+
+
+
 // //// watch processes
 const WQL = window.require('wql-process-monitor');
+
+const stopMonitor = document.getElementById("stopMonitor")
+stopMonitor.addEventListener("click", () => {
+  WQL.closeEventSink();
+})
 
 WQL.createEventSink(); //init the event sink
 const processMonitor = WQL.subscribe({
@@ -14,6 +47,10 @@ const processMonitor = WQL.subscribe({
 }); //subscribe to all events, including chatter (only way to get trggered by admin processes)
 
 processMonitor.on("creation", ([process, pid, filepath]) => {
+
+  logArray.push(Date.now() + ' - ' + 'Process monitor (creation): ' + process + ' (PID ' + pid + ')')
+  logfile.innerText = logArray.join("\r\n")
+  logfile.scrollTop = logfile.scrollHeight;
 
   if (process === 'StarCitizen.exe') {
     console.log(`Star Citizen launched: ${process}::${pid} ["${filepath}"]`);
@@ -27,6 +64,11 @@ processMonitor.on("creation", ([process, pid, filepath]) => {
 });
 
 processMonitor.on("deletion", ([process, pid]) => {
+
+  logArray.push(Date.now() + ' - ' + 'Process monitor (deletion): ' + process + ' (PID ' + pid + ')')
+  logfile.innerText = logArray.join("\r\n")
+  logfile.scrollTop = logfile.scrollHeight;
+
   if (process === 'StarCitizen.exe') {
     console.log('Star Citizen terminated');
   }

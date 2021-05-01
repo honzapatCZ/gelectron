@@ -287,12 +287,27 @@ class Application {
   }
 
   public syncNTPtime() {
+
+    let self = this
+
     ntpsync.ntpLocalClockDeltaPromise().then((iNTPData) => {
+
+      const window = self.getWindow(AppWindows.main);
+      if (window) {
+          window.webContents.send('append_log', `Time correction: ${iNTPData.minimalNTPLatencyDelta} ms (minimal latency: ${iNTPData.minimalNTPLatency} ms, ${iNTPData.totalSampleCount} NTP pings)`);
+      }
+
       timeDelta = iNTPData.minimalNTPLatencyDelta;
       console.log(`(Local Time - NTP Time) Delta = ${iNTPData.minimalNTPLatencyDelta} ms`);
       console.log(`Minimal Ping Latency was ${iNTPData.minimalNTPLatency} ms`);
       console.log(`Total ${iNTPData.totalSampleCount} successful NTP Pings`);
     }).catch((err) => {
+
+      const window = self.getWindow(AppWindows.main);
+      if (window) {
+        window.webContents.send('append_log', err);
+      }
+
       console.log(err);
     });
   }
@@ -1050,9 +1065,12 @@ class Application {
 
     this.setupIpc();
 
-    this.injectOverlay();
 
     const self = this;
+
+    setTimeout(() => {
+      self.injectOverlay();
+    }, 2000);
 
     // sync NTP time (find delta to system time) every hour
     setInterval(() => {
@@ -1194,16 +1212,24 @@ class Application {
     // console.log(this.OvHook.getTopWindows())
     for (const window of this.OvHook.getTopWindows()) {
       if (window && window.executable && (window.executable.endsWith('\\LIVE\\Bin64\\StarCitizen.exe') || window.executable.endsWith('\\PTU\\Bin64\\StarCitizen.exe')) && window.title && window.title === 'Star Citizen') {
-        console.log(' found Star Citizen process:', window.executable);
-        console.log(` processId: ${window.processId}, threadId: ${window.threadId}, admin: ${window.admin}, title: ${window.title}\n--------------------`);
-        console.log(` am I elevated? ${elevated}\n--------------------`);
 
-        this.OvHook.injectProcess(window, {
+        const mWindow = this.getWindow(AppWindows.main);
+        if (mWindow) {
+          mWindow.webContents.send('append_log', `Star Citizen process: ${window.executable}`);
+          mWindow.webContents.send('append_log', `processId: ${window.processId}, threadId: ${window.threadId}, admin: ${window.admin}, title: ${window.title}, selfElevation: ${elevated}`);
+        }
+
+        const injectionResult = this.OvHook.injectProcess(window, {
           dllPath: path.join(global.CONFIG.distDir, 'overlay/n_overlay.dll'),
           dllPath64: path.join(global.CONFIG.distDir, 'overlay/n_overlay.x64.dll'),
           helper: path.join(global.CONFIG.distDir, 'overlay/n_ovhelper.exe'),
           helper64: path.join(global.CONFIG.distDir, 'overlay/n_ovhelper.x64.exe'),
         });
+
+        if (mWindow) {
+          mWindow.webContents.send('append_log', `Injection result: ${JSON.stringify(injectionResult)}`);
+        }
+
       }
     }
   }
@@ -1312,13 +1338,17 @@ class Application {
     });
 
     ipcMain.on('inject', (event, pid) => {
-      console.log('--------------------');
+
       if (pid) {
-        console.log(` trying injection, triggered by process ${pid}`);
+
+        event.sender.send('append_log', `Trying injection: triggered by process ${pid}`);
+
       } else {
-        console.log(' trying injection, triggered manually');
+
+        event.sender.send('append_log', `Trying injection: triggered manually`);
+
       }
-      console.log('--------------------');
+
 
       this.injectOverlay();
     });
