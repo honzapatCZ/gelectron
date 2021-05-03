@@ -486,7 +486,7 @@
                 <li class="mdl-menu__item">Help</li>
                 <li id='show-debug' class="mdl-menu__item">Debug</li>
                 <li id='show-log' class="mdl-menu__item mdl-menu__item--full-bleed-divider">Log</li>
-                <li class="mdl-menu__item">Settings</li>
+                <li id='show-settings' class="mdl-menu__item">Settings</li>
             </ul>
 
             </div>
@@ -521,6 +521,34 @@
         </div>
     </dialog>
 
+    <dialog id='settingsDialog' class="mdl-dialog dark" style="width: 100%; bottom:0; top: 200px; height: 648px;">
+        <div class="mdl-dialog__content" style="color: rgba(255,255,255,.8) !important;">
+
+
+
+            <div class="top mdl-layout__header-row" style="padding: 0 !important; background-color: rgba(0,0,0,.33);">
+
+
+                    <span style="font-size: 14px !important; font-weight: 500 !important; margin-left: 16px;">
+                        Settings
+                    </span>
+
+
+                <div class = "mdl-layout-spacer"></div>
+
+                <button style="-webkit-app-region: no-drag;  border-radius: 0 !important;"
+                        class="mdl-button mdl-js-button mdl-button--icon close">
+                    <i class="material-icons">close</i>
+                </button>
+
+
+            </div>
+
+XXX
+
+        </div>
+
+    </dialog>
 
     <dialog id='debugDialog' class="mdl-dialog dark" style="width: 100%; bottom:0; top: 200px; height: 648px;">
         <div class="mdl-dialog__content" style="color: rgba(255,255,255,.8) !important;">
@@ -555,7 +583,10 @@
                 <button id='getUser' type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Fetch current user</button>
             </div>
             <div style="margin-top: 32px;">
-                <button id='stopMonitor' type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Stop Process Monitoring</button>
+                <button id='stopMonitor' type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Stop process monitoring</button>
+            </div>
+            <div style="margin-top: 32px;">
+                <button id='checkForUpdates' type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Check for updates</button>
             </div>
 
         </div>
@@ -609,6 +640,14 @@
         const {
             ipcRenderer
         } = window.require('electron')
+
+
+
+        const checkForUpdates = document.getElementById("checkForUpdates")
+        checkForUpdates.addEventListener("click", () => {
+            ipcRenderer.send("checkForUpdates")
+        })
+
 
         const quit = document.getElementById('quitVerseguide')
         quit.addEventListener('click', () => {
@@ -677,6 +716,19 @@
         });
         logDialog.querySelector('.close').addEventListener('click', function() {
             logDialog.close();
+        });
+
+        const settingsDialog = document.getElementById('settingsDialog');
+        const showSettingsButton = document.querySelector('#show-settings');
+
+        if (! settingsDialog.showModal) {
+            dialogPolyfill.registerDialog(settingsDialog);
+        }
+        showSettingsButton.addEventListener('click', function() {
+            settingsDialog.showModal();
+        });
+        settingsDialog.querySelector('.close').addEventListener('click', function() {
+            settingsDialog.close();
         });
 
 

@@ -4,7 +4,7 @@
     "appId": "com.verseguide.overlay",
     "author": "verseguide.com",
     "description": "In-game Overlay for Star Citizen connecting to VerseGuide.com Database",
-    "version": "0.4.3",
+    "version": "0.5.0",
     "main": "dist/main/main.js",
     "license": "MIT",
     "scripts": {

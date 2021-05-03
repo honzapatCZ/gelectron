@@ -28,11 +28,11 @@
             <img src="../assets/verseguide.svg" alt="VerseGuide" width="300" style="margin-right: 84px; margin-left: 84px; margin-bottom: 16px;">
         </div>
 
-        <div class="none" style="margin-bottom: 16px; width: 452px;  border-radius: 7.8674px; font-weight: 300; font-family: Roboto; padding: 8px;   color: white; ">
+        <div style="margin-bottom: 16px; width: 452px;  border-radius: 7.8674px; font-weight: 300; font-family: Roboto; padding: 8px;   color: white; ">
             Type command <span style="font-weight: bold">'<code>/showlocation</code>'</span> in Global Chat to manually to trigger a location update.
         </div>
 
-        <div class="none" style="margin-bottom: 16px; width: 452px;  border-radius: 7.8674px; font-weight: 500; font-family: Roboto; padding: 8px;  background-color:rgba(0,0,0,.67); color: white; border: thin solid white;">
+        <div style="margin-bottom: 16px; width: 452px;  border-radius: 7.8674px; font-weight: 500; font-family: Roboto; padding: 8px;  background-color:rgba(0,0,0,.67); color: white; border: thin solid white;">
         <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="show">
             <input type="checkbox" id="show" class="mdl-switch__input" checked>
             <span class="mdl-switch__label">Show VerseGuide Overlay</span>
@@ -91,6 +91,18 @@
 
             document.getElementById('show').click();
 
+        })
+
+        ipcRenderer.on("showOverlay", (event) => {
+            if ( document.getElementById('show').checked === false ) {
+                document.getElementById('show').click();
+            }
+        })
+
+        ipcRenderer.on("disableAuto", (event) => {
+            if ( document.getElementById('auto').checked === true ) {
+                document.getElementById('auto').click();
+            }
         })
 
         let show = document.getElementById("show")

@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>VerseGuide</title>
+    <style>
+
+        .none {
+            display: none !important;
+        }
+
+        body {
+            width: 1024px;
+            height: 768px;
+            background-color: rgba(0,0,0,.67);
+            font-family: "univiaPro", sans-serif !important;
+            overflow: hidden;
+            color: white;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .large {
+            font-size: 16px;
+            line-height: 24px;
+            font-weight: 400;
+        }
+
+
+        .mdl-layout__content::-webkit-scrollbar {
+            width: 14px;
+        }
+        .mdl-layout__content::-webkit-scrollbar-corner {
+            background: rgba(0,0,0,0);
+        }
+        .mdl-layout__content::-webkit-scrollbar-thumb {
+            background-color: rgba(0, 0, 0, 0.33);
+            border-top: 8px solid rgba(0,0,0,0);
+            border-bottom: 8px solid rgba(0,0,0,0);
+            border-left: 0;
+            border-right: 6px solid rgba(0,0,0,0);
+            background-clip: content-box;
+            min-width: 14px;
+            min-height: 32px;
+        }
+        .mdl-layout__content::-webkit-scrollbar-track {
+            background-color: rgba(0,0,0,0);
+        }
+
+        img, a {
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        .mdl-layout {
+            box-sizing: border-box;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,.2);
+        }
+
+        .mdl-layout__header {
+            background: transparent !important;
+        }
+
+        .mdl-button {
+            font-family: "univiaPro", sans-serif !important;
+        }
+
+        .top {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            box-sizing: border-box;
+            height: 32px !important;
+        }
+
+        .bottom {
+            box-sizing: border-box;
+            background-color: rgba(0, 0, 0, 0.33);
+            color: white;
+            width: 100%;
+            padding: 10px;
+        }
+
+        .portfolio-header {
+            -webkit-app-region: drag;
+            position: relative;
+        }
+
+        .mdl-layout__header {
+            background-color: rgba(0,0,0,.33) !important;
+        }
+
+
+        .portfolio-header .mdl-layout__header-row {
+            padding: 0;
+            -webkit-justify-content: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            height: 32px !important;
+        }
+
+        .mdl-layout__title {
+            font-size: 14px;
+            line-height: 32px;
+            text-align: left !important;
+            font-weight: 300;
+        }
+
+
+        .portfolio-logo-row {
+            min-height: 32px;
+        }
+
+
+        .mdl-layout__tab-bar {
+            background-color: rgba(0, 0, 0, 0.33) !important;
+        }
+
+        .mdl-menu__outline, .mdl-dialog {
+            background-color: rgba(255,255,255,.8) !important;
+            backdrop-filter: blur(4px);
+            box-shadow: none !important;
+            border: 1px solid rgba(0,0,0,.2) !important;
+            box-sizing: border-box;
+            color: white !important;
+            border-radius: 4px !important;
+            overflow: hidden;
+        }
+
+        .mdl-menu, .mdl-menu__outline {
+            border-radius: 2px !important;
+            overflow: hidden;
+        }
+
+        .top .mdl-menu__outline {
+            margin-left: 16px;
+            margin-top: -16px;
+        }
+
+        .bottom .mdl-menu__outline {
+            margin-left: 20px;
+            margin-top: 20px;
+        }
+
+        .mdl-menu__item {
+            font-size: 14px !important;
+            height: 42px !important;
+            line-height: 42px !important;
+            padding: 0 16px !important;
+        }
+
+        .mdl-menu__item {
+            font-weight: 500 !important;
+        }
+
+        .mdl-menu__item:hover {
+            background-color: rgba(255,255,255,.9) !important;
+        }
+
+        .mdl-tooltip {
+            background-color: rgba(158,158,158,.2) !important;
+            line-height: 12px !important;
+            font-size: 12px !important;
+            padding: 10px !important;
+            border-radius: 0 !important;
+        }
+
+        .mdl-menu__item--full-bleed-divider {
+            border-bottom: 1px solid rgba(0,0,0,.12) !important;
+        }
+
+        .light .mdl-button--accent {
+            height: 40px !important;
+            padding: 0 22px !important;
+            color: black !important;
+            text-transform: none !important;
+            font-weight: 500 !important;
+        }
+
+        .light .mdl-button--colored {
+            height: 40px !important;
+            padding: 0 22px !important;
+            box-shadow: none !important;
+            text-transform: none !important;
+            font-weight: 500 !important;
+        }
+
+        .dark .mdl-switch__track {
+            background-color: rgba(255, 255, 255, 0.26);
+        }
+
+        .dark .mdl-switch.is-disabled .mdl-switch__track {
+            background-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .dark .mdl-radio__outer-circle {
+            border: 2px solid rgba(255, 255, 255, .54);
+        }
+
+
+        .dark .mdl-button--accent {
+            box-sizing: content-box !important;
+            border: 2px solid transparent !important;
+            color: white !important;
+            opacity: .67;
+            text-transform: none !important;
+            font-weight: 500 !important;
+        }
+
+        .dark .mdl-button--colored {
+            box-sizing: content-box !important;
+            border: 2px solid rgba(255,255,255,.44) !important;
+            background-color: transparent !important;
+            color: rgb(64,196,255) !important;
+            text-transform: none !important;
+            font-weight: 500 !important;
+        }
+
+        .mdl-button--fab {
+            box-sizing: border-box !important;
+            box-shadow: none !important;
+            border: 2px solid rgba(255,255,255,.44) !important;
+            color: white !important;
+            background-color: rgba(0, 0, 0, 0.33) !important;
+            background-position: center !important;
+            background-size: cover !important;
+            overflow: hidden !important;
+        }
+
+        .mdl-textfield__input {
+            font-weight: 500 !important;
+            font-family: "univiaPro", sans-serif !important;
+        }
+
+        .mdl-textfield__input {
+            border-bottom: 1px solid rgba(0,0,0,.48) !important;
+        }
+
+        .mdl-textfield__label {
+            color: rgba(0,0,0,.52) !important;
+        }
+
+        .mdl-checkbox__box-outline {
+            border: 2px solid rgba(0,0,0,.48) !important;
+        }
+
+        .mdl-checkbox.is-checked .mdl-checkbox__box-outline {
+            border: 2px solid rgb(64,196,255) !important;
+        }
+
+        .dark .mdl-textfield__input {
+            border-bottom: 1px solid rgba(255,255,255,.48) !important;
+        }
+
+        .dark .mdl-textfield__label {
+            color: rgba(255,255,255,.52) !important;
+        }
+
+
+        .dark .mdl-checkbox__box-outline {
+            border: 2px solid rgba(255,255,255,.8) !important;
+        }
+
+        .dark .mdl-checkbox.is-checked .mdl-checkbox__box-outline {
+            border: 2px solid rgb(64,196,255) !important;
+        }
+
+
+    </style>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="../assets/fonts/univiaPro.css" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/fonts/materialIcons.css">
+    <script defer src="../assets/material.min.js"></script>
+    <link rel="stylesheet" href="../assets/style.css" />
+
+</head>
+
+<body>
+
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header
+            mdl-layout--fixed-tabs" style="overflow: hidden !important;">
+
+
+    <header class="mdl-layout__header mdl-layout__header--fixed portfolio-header glow">
+        <div class="mdl-layout__header-row portfolio-logo-row">
+
+            <div class="top mdl-layout__header-row">
+
+                <span class="mdl-layout__title"><img src="../assets/verseguide.svg" alt="VerseGuide Overlay" style="height: 32px; width: auto;"></span>
+
+
+
+                <div class = "mdl-layout-spacer"></div>
+
+                <button id="minimizeOverlay" style="-webkit-app-region: no-drag;  border-radius: 0 !important;"
+                        class="mdl-button mdl-js-button mdl-button--icon">
+                    <i class="material-icons">close</i>
+                </button>
+
+
+
+            </div>
+
+        </div>
+        <div class="mdl-layout__tab-bar mdl-js-ripple-effect" style="-webkit-app-region: no-drag">
+            <a href="#fixed-tab-1" class="mdl-layout__tab is-active" style="text-transform: none !important; font-size: larger;">My Location</a>
+            <a href="#fixed-tab-2" class="mdl-layout__tab" style="text-transform: none !important; font-size: larger;">Database</a>
+            <a href="#fixed-tab-3" class="mdl-layout__tab" style="text-transform: none !important; font-size: larger;">Settings</a>
+        </div>
+    </header>
+
+    <main class="mdl-layout__content">
+        <section class="mdl-layout__tab-panel is-active" id="fixed-tab-1">
+            <div class="page-content">
+
+                <div class="mdl-grid">
+                    <div class="mdl-cell mdl-cell--6-col">
+                <div style="padding: 25px;">
+                    <p class="large">In order to update your location, please type<code> /showlocation </code>in Global Chat.</p>
+                    <p style="font-weight: 300;">Either press <img src="../assets/f12.svg" alt="[F12]" style="height: 20px; width: auto; margin:-4px 4px 0 4px;"/> and <img src="../assets/enter.svg" alt="[Enter]" style="height: 20px; width: auto; margin:-4px 4px 0 4px;"/> to interact with the the chat window, or press <img src="../assets/f11.svg" alt="[F11]" style="height: 20px; width: auto; margin:-4px 4px 0 4px;"/> to open the mobiGlass communications app.</p>
+                </div>
+                    </div>
+                    <div class="mdl-cell mdl-cell--6-col">
+                    </div>
+                </div>
+
+
+            </div>
+        </section>
+        <section class="mdl-layout__tab-panel" id="fixed-tab-2">
+            <div class="page-content"><!-- Your content goes here --></div>
+        </section>
+        <section class="mdl-layout__tab-panel" id="fixed-tab-3">
+            <div class="page-content">
+                <div class="mdl-grid">
+                    <div class="mdl-cell mdl-cell--6-col">
+                        <div style="padding: 25px;">
+
+                            <p>Display Options</p>
+                            <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="fps" style="margin-bottom: 16px;">
+                                <input type="checkbox" id="fps" class="mdl-switch__input" checked>
+                                <span class="mdl-switch__label">Show DirectX framerate</span>
+                            </label>
+                            <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="sbn" style="margin-bottom: 16px;">
+                                <input type="checkbox" id="sbn" class="mdl-switch__input" disabled>
+                                <span class="mdl-switch__label">Force 16:9 aspect ratio</span>
+                            </label>
+
+                        </div>
+                    </div>
+                    <div class="mdl-cell mdl-cell--6-col">
+                        <div style="padding: 25px;" class="dark">
+                            <p>Auto Location Update</p>
+                            <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="auto">
+                                <input type="checkbox" id="auto" class="mdl-switch__input">
+                                <span class="mdl-switch__label">Send<code> /showlocation </code></span>
+                            </label>
+
+                            <div class="mdl-grid">
+                                <div class="mdl-cell mdl-cell--3-col">
+                            <p class="large" style="margin: 8px 0 0 38px">every</p>
+                                </div>
+                                <div class="mdl-cell mdl-cell--9-col">
+                            <div style="margin: 8px 0 0 0">
+                                <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="frequency-1">
+                                    <input type="radio" id="frequency-1" class="mdl-radio__button" name="frequency" value="1" checked>
+                                    <span class="mdl-radio__label" style="white-space: nowrap;">1 minute</span>
+                                </label>
+                            </div>
+                            <div style="margin: 8px 0 0 0">
+                                <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="frequency-2">
+                                    <input type="radio" id="frequency-2" class="mdl-radio__button" name="frequency" value="5">
+                                    <span class="mdl-radio__label" style="white-space: nowrap;">5 minutes</span>
+                                </label>
+                            </div>
+                            <div style="margin: 8px 0 0 0">
+                                <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="frequency-3">
+                                    <input type="radio" id="frequency-3" class="mdl-radio__button" name="frequency" value="15">
+                                    <span class="mdl-radio__label" style="white-space: nowrap;">15 minutes</span>
+                                </label>
+                            </div>
+                                </div>
+                            </div>
+
+                            <div class="mdl-grid">
+                                <div class="mdl-cell mdl-cell--3-col">
+                                    <p class="large" style="margin: 0 0 0 38px">use</p>
+                                </div>
+                                <div class="mdl-cell mdl-cell--9-col">
+                                    <div style="margin: 0 0 0 0">
+                                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="command-1">
+                                            <input type="radio" id="command-1" class="mdl-radio__button" name="command" value="1" checked>
+                                            <span class="mdl-radio__label" style="white-space: nowrap;"><img src="../assets/enter.svg" alt="[Enter]" style="height: 20px; width: auto; margin-left: 4px; margin-top:-4px;"/><code style="margin-left: 8px;">/showlocation</code><img src="../assets/enter.svg" alt="[Enter]" style="height: 20px; width: auto; margin-left: 8px; margin-top:-4px;"/></span>
+                                        </label>
+                                        <p style="margin-left: 30px; font-weight: 300;">Global Chat must be <span style="text-decoration: underline;">visible</span> for this to work!</p>
+                                    </div>
+                                    <div style="margin: 8px 0 0 0">
+                                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="command-2">
+                                            <input type="radio" id="command-2" class="mdl-radio__button" name="command" value="2">
+                                            <span class="mdl-radio__label" style="white-space: nowrap;"><img src="../assets/f12.svg" alt="[F12]" style="height: 20px; width: auto; margin-left: 4px; margin-top:-4px;"/><img src="../assets/enter.svg" alt="[Enter]" style="height: 20px; width: auto; margin-left: 4px; margin-top:-4px;"/><code style="margin-left: 8px;">/showlocation</code><img src="../assets/enter.svg" alt="[Enter]" style="height: 20px; width: auto; margin-left: 8px; margin-top:-4px;"/><img src="../assets/f12.svg" alt="[F12]" style="height: 20px; width: auto; margin-left: 4px; margin-top:-4px;"/></span>
+                                        </label>
+                                        <p style="margin-left: 30px; font-weight: 300;">Global Chat must be <span style="text-decoration: underline;">hidden</span> for this to work!</p>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+
+        <div class="bottom mdl-layout__header-row" style="padding-left: 16px !important;">
+            <!-- Title -->
+            <!-- Right aligned menu below button -->
+            <div>
+                <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="show" style="margin-right: 28px;">
+                    <input type="checkbox" id="show" class="mdl-switch__input" checked>
+                    <span class="mdl-switch__label">Show VerseGuide Overlay </span>
+                </label>
+
+            </div>
+
+            <div style="margin-left: 16px;"><img src="../assets/altComma.svg" alt="[Alt]+[,]" style="height: 20px; width: auto;"/></div>
+
+            <span class = "mdl-layout-spacer"></span>
+
+
+        </div>
+
+
+
+</div>
+
+
+
+    <script>
+
+
+
+
+        const {
+            ipcRenderer,
+            remote
+        } = window.require('electron')
+
+        ipcRenderer.on("hideToggle", (event) => {
+
+            document.getElementById('show').click();
+
+        })
+
+        ipcRenderer.on("showOverlay", (event) => {
+            if ( document.getElementById('show').checked === false ) {
+                document.getElementById('show').click();
+            }
+        })
+
+        ipcRenderer.on("disableAuto", (event) => {
+            if ( document.getElementById('auto').checked === true ) {
+                document.getElementById('auto').click();
+            }
+        })
+
+        let show = document.getElementById("show")
+
+        show.addEventListener("input", () => {
+
+            if (show.checked) {
+                ipcRenderer.send("showOverlay")
+            } else {
+                ipcRenderer.send("hideOverlay")
+            }
+        })
+
+        let auto = document.getElementById("auto")
+
+        auto.addEventListener("change", () => {
+
+            if (auto.checked) {
+                ipcRenderer.send("updateOn")
+            } else {
+                ipcRenderer.send("updateOff")
+            }
+        })
+
+        let fps = document.getElementById("fps")
+
+        fps.addEventListener("change", () => {
+
+            if (fps.checked) {
+                ipcRenderer.send("fpsOn")
+            } else {
+                ipcRenderer.send("fpsOff")
+            }
+        })
+
+    </script>
+
+
+
+</body>
+
+</html>

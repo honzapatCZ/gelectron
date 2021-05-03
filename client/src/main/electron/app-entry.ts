@@ -7,7 +7,8 @@ import {
   clipboard,
   screen,
   shell,
-  ipcRenderer,
+  dialog,
+  autoUpdater,
 } from 'electron';
 
 // import * as fs from 'fs';
@@ -211,6 +212,54 @@ export function ConvertKeyCodeToScanCode(keyCode: number) {
 //
 /// ////////////////////////////////////////////////////////
 
+// /////////////////////////////////////////////////////////
+// Auto Updater
+
+if (app.isPackaged) {
+  const server = 'https://update.electronjs.org';
+  const feed = `${server}/OWNER/REPO/${process.platform}-${process.arch}/${app.getVersion()}`;
+
+  // @ts-ignore
+  autoUpdater.setFeedURL(feed);
+
+  autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
+    const dialogOpts = {
+      type: 'info',
+      buttons: ['Restart', 'Later'],
+      title: 'Application Update',
+      message: process.platform === 'win32' ? releaseNotes : releaseName,
+      detail: 'A new version has been downloaded. Restart the application to apply the updates.',
+    };
+
+    dialog.showMessageBox(dialogOpts).then((returnValue) => {
+      if (returnValue.response === 0) autoUpdater.quitAndInstall();
+    });
+  });
+
+  autoUpdater.on('error', (message) => {
+    console.error('There was a problem updating the application');
+    console.error(message);
+  });
+
+  autoUpdater.on('checking-for-update', () => {
+    console.log('checking-for-update');
+  });
+
+  autoUpdater.on('update-available', () => {
+    console.log('update-available');
+  });
+
+  autoUpdater.on('update-not-available', () => {
+    console.log('update-not-available');
+  });
+
+  autoUpdater.on('before-quit-for-update', () => {
+    console.log('before-quit-for-update');
+  });
+}
+
+//
+/// /////////////////////////////////////////////////////////
 let toggleCounter = false;
 let toggleHide = false;
 let toggleFPS = true;
@@ -287,14 +336,12 @@ class Application {
   }
 
   public syncNTPtime() {
-
-    let self = this
+    const self = this;
 
     ntpsync.ntpLocalClockDeltaPromise().then((iNTPData) => {
-
       const window = self.getWindow(AppWindows.main);
       if (window) {
-          window.webContents.send('append_log', `Time correction: ${iNTPData.minimalNTPLatencyDelta} ms (minimal latency: ${iNTPData.minimalNTPLatency} ms, ${iNTPData.totalSampleCount} NTP pings)`);
+        window.webContents.send('append_log', `Time correction: ${iNTPData.minimalNTPLatencyDelta} ms (minimal latency: ${iNTPData.minimalNTPLatency} ms, ${iNTPData.totalSampleCount} NTP pings)`);
       }
 
       timeDelta = iNTPData.minimalNTPLatencyDelta;
@@ -302,7 +349,6 @@ class Application {
       console.log(`Minimal Ping Latency was ${iNTPData.minimalNTPLatency} ms`);
       console.log(`Total ${iNTPData.totalSampleCount} successful NTP Pings`);
     }).catch((err) => {
-
       const window = self.getWindow(AppWindows.main);
       if (window) {
         window.webContents.send('append_log', err);
@@ -661,9 +707,14 @@ class Application {
         }
         console.log(this.Dimensions.width, this.Dimensions.height);
 
-        const window = this.getWindow('Location');
+        let window = this.getWindow('Location');
         if (window) {
           window.setPosition(this.Dimensions.width - 300 - 15, 15);
+        }
+
+        window = this.getWindow(AppWindows.osr);
+        if (window) {
+          window.setPosition((this.Dimensions.width - 1024) / 2, (this.Dimensions.height - 768) / 2);
         }
       }
 
@@ -840,8 +891,8 @@ class Application {
 
   public createOsrWindow() {
     const options: Electron.BrowserWindowConstructorOptions = {
-      height: 600,
-      width: 500,
+      height: 768,
+      width: 1024,
       frame: false,
       show: false,
       transparent: true,
@@ -853,14 +904,15 @@ class Application {
 
     const window = this.createWindow(AppWindows.osr, options);
 
-    window.setPosition(200, 200);
+    window.setPosition((this.Dimensions.width - 1024) / 2, (this.Dimensions.height - 768) / 2);
+
     // window.webContents.openDevTools({
     //   mode: "detach"
     // })
-    window.loadURL(fileUrl(path.join(global.CONFIG.distDir, 'index/osr.html')));
+    window.loadURL(fileUrl(path.join(global.CONFIG.distDir, 'index/overlay.html')));
     // window.loadURL('https://www.verseguide.com')
 
-    this.addOverlayWindow('MainOverlay', window, 0, 0);
+    this.addOverlayWindow('MainOverlay', window, 0, 32);
     return window;
   }
 
@@ -1065,7 +1117,6 @@ class Application {
 
     this.setupIpc();
 
-
     const self = this;
 
     setTimeout(() => {
@@ -1088,13 +1139,13 @@ class Application {
       if (toggleCounter) {
         flag = 'enabled';
         window.webContents.send('keysim', {
-          counter: 6,
+          counter: 5,
           flag: 'enabled',
         });
       } else {
         flag = 'disabled';
         window.webContents.send('keysim', {
-          counter: 6,
+          counter: 5,
           flag: 'disabled',
         });
       }
@@ -1196,6 +1247,17 @@ class Application {
       this.OvHook = require('node-ovhook');
     }
 
+    // unhide overlay, disable auto update
+    toggleHide = false;
+    toggleCounter = false;
+    counter = 5;
+    this.autoUpdate();
+    const window = this.getWindow(AppWindows.osr);
+    if (window) {
+      window.webContents.send('showOverlay');
+      window.webContents.send('disableAuto');
+    }
+
     // check if Electron processs is elevated
     let elevated = false;
     const childProcess = require('child_process');
@@ -1212,7 +1274,6 @@ class Application {
     // console.log(this.OvHook.getTopWindows())
     for (const window of this.OvHook.getTopWindows()) {
       if (window && window.executable && (window.executable.endsWith('\\LIVE\\Bin64\\StarCitizen.exe') || window.executable.endsWith('\\PTU\\Bin64\\StarCitizen.exe')) && window.title && window.title === 'Star Citizen') {
-
         const mWindow = this.getWindow(AppWindows.main);
         if (mWindow) {
           mWindow.webContents.send('append_log', `Star Citizen process: ${window.executable}`);
@@ -1229,7 +1290,6 @@ class Application {
         if (mWindow) {
           mWindow.webContents.send('append_log', `Injection result: ${JSON.stringify(injectionResult)}`);
         }
-
       }
     }
   }
@@ -1317,6 +1377,22 @@ class Application {
       }
     });
 
+    ipcMain.on('checkForUpdates', () => {
+      if (app.isPackaged) {
+        autoUpdater.checkForUpdates();
+      } else {
+        const dialogOpts = {
+          type: 'warning',
+          buttons: ['OK'],
+          title: 'Warning',
+          message: 'Cannot check for updates.',
+          detail: 'You are using developer mode. Please pack the app first to use the auto-update feature.',
+        };
+
+        dialog.showMessageBox(dialogOpts);
+      }
+    });
+
     ipcMain.on('logout', () => {
       const self = this;
 
@@ -1338,17 +1414,11 @@ class Application {
     });
 
     ipcMain.on('inject', (event, pid) => {
-
       if (pid) {
-
         event.sender.send('append_log', `Trying injection: triggered by process ${pid}`);
-
       } else {
-
-        event.sender.send('append_log', `Trying injection: triggered manually`);
-
+        event.sender.send('append_log', 'Trying injection: triggered manually');
       }
-
 
       this.injectOverlay();
     });
