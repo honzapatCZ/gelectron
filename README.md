@@ -1,6 +1,9 @@
 # VerseGuide.com Star Citizen Game Overlay 
 
-Creates interactive transparent browser windows inside the game window
+Creates interactive transparent browser windows inside the game window.
+
+The VerseGuide Overlay includes multiple tools developed by the VerseGuide team including Citizens Pitapa, justMurphy, xabdiben, Graupunkt, StoicMako and LordSkippy.
+It watches Windows processes and tries to inject overlay elements into Star Citizen via DirectX upon launch. It registers hotkeys and simulates keyboard input to execute a command in Global Chat that allows us to retrieve location information via the Windows clipboard.
 
 ## Installation
 
@@ -31,9 +34,6 @@ These are fair warnings. The VerseGuide Overlay is in fact quite similar to soph
 ## Made by the Community
 
 This is an unofficial Star Citizen project, not affiliated with the Cloud Imperium group of companies. All content within this project not authored by its developer or users are property of their respective owners.
-                          
-The overlay includes multiple tools developed by the VerseGuide team including Citizens Pitapa, justMurphy, xabdiben, Graupunkt, StoicMako and LordSkippy.
-It watches Windows processes and tries to inject overlay elements into Star Citizen via DirectX upon launch. It registers hotkeys and simulates keyboard input to execute a command in Global Chat that allows us to retrieve location information via the Windows clipboard.
 
 ## Requirements
 
