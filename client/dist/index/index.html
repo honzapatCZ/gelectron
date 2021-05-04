@@ -10,6 +10,10 @@
             display: none !important;
         }
 
+        .hide {
+            visibility: hidden !important;
+        }
+
         body {
             width: 600px;
             height: 850px;
@@ -485,13 +489,52 @@
                 data-mdl-for="demo-menu-config">
                 <li class="mdl-menu__item">Help</li>
                 <li id='show-debug' class="mdl-menu__item">Debug</li>
-                <li id='show-log' class="mdl-menu__item mdl-menu__item--full-bleed-divider">Log</li>
+                <li id='show-log' class="mdl-menu__item">Log</li>
+                <li id='checkForUpdates' class="mdl-menu__item mdl-menu__item--full-bleed-divider">Check for Updates</li>
                 <li id='show-settings' class="mdl-menu__item">Settings</li>
             </ul>
 
             </div>
 
         </div>
+
+    <dialog id='updateDialog' class="mdl-dialog light" style="width: 360px; transform: translateY(65px);">
+
+        <div style="margin: -15px -15px 0 -15px !important; max-width: calc(100% + 30px) !important;" id="loadingIndicator" class="mdl-progress mdl-js-progress mdl-progress__indeterminate"></div>
+
+        <div class="mdl-dialog__content" style="color: rgba(0,0,0,.8) !important;">
+            <p style="font-size: 18px !important; font-weight: 500 !important;" id="updateStatus">
+                Update
+            </p>
+
+
+
+            <div class="mdl-grid" style="padding: 8px 0 0 0 !important;">
+                <div class="mdl-cell mdl-cell--4-col" >
+                    <div style="margin: -8px;">
+                        <p>Current: <span id="currentVersion"></span><br/>
+                        <span id="currentDate"></span></p>
+                    </div>
+                </div>
+                <div class="mdl-cell mdl-cell--4-col">
+                    <div style="margin: -8px;">
+                        <p>Available: <span id="latestVersion"></span><br/>
+                        <span id="latestDate"></span></p>
+                    </div>
+                </div>
+            </div>
+
+            <p id="updateInfo"></p>
+
+        </div>
+        <div class="mdl-dialog__actions">
+            <button type="button" class="none mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored restartNow">Restart now</button>
+            <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored updateOK">OK</button>
+            <button type="button" class="none mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored installUpdate">Install update</button>
+            <button type="button" class="none mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent updateCancel">Cancel</button>
+            <button type="button" class="none mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent restartLater">Later</button>
+        </div>
+    </dialog>
 
     <dialog id='userDialog' class="mdl-dialog light" style="width: 360px; transform: translateY(65px);">
         <div class="mdl-dialog__content" style="color: rgba(0,0,0,.8) !important;">
@@ -585,9 +628,7 @@ XXX
             <div style="margin-top: 32px;">
                 <button id='stopMonitor' type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Stop process monitoring</button>
             </div>
-            <div style="margin-top: 32px;">
-                <button id='checkForUpdates' type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Check for updates</button>
-            </div>
+
 
         </div>
 
@@ -643,11 +684,111 @@ XXX
 
 
 
-        const checkForUpdates = document.getElementById("checkForUpdates")
-        checkForUpdates.addEventListener("click", () => {
-            ipcRenderer.send("checkForUpdates")
-        })
 
+        const updateDialog = document.getElementById('updateDialog');
+        const checkForUpdates = document.querySelector('#checkForUpdates');
+        const updateStatus = document.querySelector('#updateStatus');
+        const updateInfo = document.querySelector('#updateInfo');
+
+        const latestVersionH = document.querySelector('#latestVersion');
+        const latestDateH = document.querySelector('#latestDate');
+        const currentVersionH = document.querySelector('#currentVersion');
+        const currentDateH = document.querySelector('#currentDate');
+        const loadingIndicator = document.querySelector('#loadingIndicator');
+
+        if (! updateDialog.showModal) {
+            dialogPolyfill.registerDialog(updateDialog);
+        }
+
+        const updateOK = updateDialog.querySelector('.updateOK');
+        const installUpdate = updateDialog.querySelector('.installUpdate');
+        const updateCancel = updateDialog.querySelector('.updateCancel');
+        const restartLater = updateDialog.querySelector('.restartLater');
+        const restartNow = updateDialog.querySelector('.restartNow');
+
+        checkForUpdates.addEventListener('click', function() {
+
+            loadingIndicator.classList.remove("hide");
+
+            updateOK.classList.remove("none");
+            installUpdate.classList.add("none");
+            updateCancel.classList.add("none");
+            restartLater.classList.add("none");
+            restartNow.classList.add("none");
+
+            updateStatus.innerHTML = 'Checking for Updates';
+            currentVersionH.innerHTML = '&nbsp;';
+            currentDateH.innerHTML = '&nbsp;';
+            latestVersionH.innerHTML = '&nbsp;';
+            latestDateH.innerHTML = '&nbsp;';
+            updateInfo.innerHTML = '&nbsp;';
+
+            ipcRenderer.send("checkForUpdates");
+            updateDialog.showModal();
+        });
+        updateDialog.querySelector('.updateCancel').addEventListener('click', function() {
+            updateDialog.close();
+        });
+
+        updateDialog.querySelector('.restartLater').addEventListener('click', function() {
+            updateDialog.close();
+        });
+
+        updateDialog.querySelector('.updateOK').addEventListener('click', function() {
+            updateDialog.close();
+        });
+
+        updateDialog.querySelector('.installUpdate').addEventListener('click', function() {
+            loadingIndicator.classList.remove("hide");
+            ipcRenderer.send('installUpdate');
+        });
+
+        ipcRenderer.on("latestVersion", (event, {latestVersion, latestDate, latestInfo, currentVersion, currentDate, error, message}) => {
+
+            loadingIndicator.classList.add("hide");
+
+            if (error) {
+                console.log('Error:', message)
+                updateStatus.innerHTML = 'Error';
+                updateInfo.innerHTML = message;
+            } else {
+
+                let currentDateD = new Date(currentDate);
+                let latestDateD = new Date(latestDate);
+
+                let updateFound = false
+                const isNewer = (currentDateD.getTime() - latestDateD.getTime())
+                if (isNewer < 0) {
+                    updateFound = true
+                }
+
+                currentDateD = currentDateD.toLocaleDateString('en-CA', {
+                    month: 'short', day: 'numeric', year: 'numeric'
+                });
+
+                latestDateD = latestDateD.toLocaleDateString('en-CA', {
+                    month: 'short', day: 'numeric', year: 'numeric'
+                });
+
+                currentVersionH.innerHTML = currentVersion;
+                currentDateH.innerHTML = currentDateD;
+                latestVersionH.innerHTML = latestVersion;
+                latestDateH.innerHTML = latestDateD;
+                updateInfo.innerHTML = latestInfo;
+
+                if (updateFound) {
+
+                    updateOK.classList.add("none");
+                    installUpdate.classList.remove("none");
+                    updateCancel.classList.remove("none");
+
+                    updateStatus.innerHTML = 'Update Found';
+                } else {
+                    updateStatus.innerHTML = 'No Updates Available';
+                }
+            }
+
+        })
 
         const quit = document.getElementById('quitVerseguide')
         quit.addEventListener('click', () => {

@@ -217,7 +217,7 @@ export function ConvertKeyCodeToScanCode(keyCode: number) {
 
 if (app.isPackaged) {
   const server = 'https://update.electronjs.org';
-  const feed = `${server}/OWNER/REPO/${process.platform}-${process.arch}/${app.getVersion()}`;
+  const feed = `${server}/gulbrillo/VerseGuide-overlay/${process.platform}-${process.arch}/${app.getVersion()}`;
 
   // @ts-ignore
   autoUpdater.setFeedURL(feed);
@@ -260,6 +260,9 @@ if (app.isPackaged) {
 
 //
 /// /////////////////////////////////////////////////////////
+
+const axios = require('axios').default;
+
 let toggleCounter = false;
 let toggleHide = false;
 let toggleFPS = true;
@@ -1377,7 +1380,7 @@ class Application {
       }
     });
 
-    ipcMain.on('checkForUpdates', () => {
+    ipcMain.on('installUpdates', () => {
       if (app.isPackaged) {
         autoUpdater.checkForUpdates();
       } else {
@@ -1391,6 +1394,49 @@ class Application {
 
         dialog.showMessageBox(dialogOpts);
       }
+    });
+
+    ipcMain.on('checkForUpdates', () => {
+      const window = this.getWindow(AppWindows.main);
+      let errorText
+
+      axios.get(`https://api.github.com/repos/gulbrillo/VerseGuide-overlay/releases/tags/v${app.getVersion()}`)
+        .then((responseCurrent) => {
+
+            axios.get('https://api.github.com/repos/gulbrillo/VerseGuide-overlay/releases/latest')
+              .then((responseLatest) => {
+                if (window) {
+                  window.webContents.send('latestVersion', {
+                    current: app.getVersion(), latestVersion: responseLatest.data.tag_name, latestDate: responseLatest.data.created_at, latestInfo: responseLatest.data.body, currentVersion: responseCurrent.data.tag_name, currentDate: responseCurrent.data.created_at,
+                  });
+                }
+              })
+              .catch((error) => {
+
+                errorText = error
+                if (errorText && errorText.response) {errorText = errorText.response}
+                if (errorText && errorText.data) {errorText = errorText.data}
+                if (errorText && errorText.message === 'Not Found') {errorText = 'unable to find any releases'}
+                  else if (errorText && errorText.message) {errorText = errorText.message}
+
+                if (window) {
+                  window.webContents.send('latestVersion', { error: true, message: errorText });
+                }
+              });
+
+        })
+        .catch((error) => {
+
+          errorText = error
+          if (errorText && errorText.response) {errorText = errorText.response}
+          if (errorText && errorText.data) {errorText = errorText.data}
+          if (errorText && errorText.message === 'Not Found') {errorText = 'you are running an unofficial version of VerseGuide Overlay'}
+            else if (errorText && errorText.message) {errorText = errorText.message}
+
+          if (window) {
+            window.webContents.send('latestVersion', { error: true, message: errorText });
+          }
+        });
     });
 
     ipcMain.on('logout', () => {

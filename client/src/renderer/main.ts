@@ -44,7 +44,9 @@ stopMonitor.addEventListener("click", () => {
 WQL.createEventSink(); //init the event sink
 const processMonitor = WQL.subscribe({
   filterWindowsNoise: false,
-  filter:  ["verseguide.exe","electron.exe"],
+  filter:  ["StarCitizen.exe"],
+  whitelist: true,
+
 }); //subscribe to all events, including chatter (only way to get trggered by admin processes)
 
 processMonitor.on("creation", ([process, pid, filepath]) => {

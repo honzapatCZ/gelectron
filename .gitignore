@@ -5,3 +5,4 @@
 /client/dist/assets/fonts/
 /client/out/
 /client/forge.config.js
+/client/WindowsCodeSigning.pfx
