@@ -22,7 +22,7 @@ This app is open source and digitally signed. However, since we are a small deve
 #### Windows Defender Warning
 
 The installer may throw a Windows Defender SmartScreen `unrecognized app` warning. This is because the app is new (unknown to Windows).
-Thanks to generosity of Citizen Kevlar099 we were able to purchase a `OV Code Signing Certificate` (identity verification) and all our installers are signed by one of our developers (Simon F Barke). This way we will slowly build reputation as files are downloaded. Over time, Windows Defender will start trusting us. 🤞 
+Thanks to the generosity of Citizen Kevlar099 we were able to purchase a `OV Code Signing Certificate` (identity verification) and all our installers are signed by one of our developers (Simon F Barke). This way we will slowly build reputation as files are downloaded. Over time, Windows Defender will start trusting us. 🤞 
 
 #### Virus Scanner Malware/Adware Warning
 
