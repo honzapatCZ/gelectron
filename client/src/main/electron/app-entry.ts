@@ -1126,10 +1126,10 @@ class Application {
       self.injectOverlay();
     }, 2000);
 
-    // sync NTP time (find delta to system time) every hour
+    // sync NTP time (find delta to system time) every 15 minutes
     setInterval(() => {
       self.syncNTPtime();
-    }, 3600000);
+    }, 900000);
   }
 
   public activate() {
