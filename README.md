@@ -26,7 +26,7 @@ Thanks to the generosity of Citizen Kevlar099 we were able to purchase a `OV Cod
 
 #### Virus Scanner Malware/Adware Warning
 
-These are fair warnings. The VerseGuide Overlay is in fact quite similar to sophisticated Malware or Adware: we monitor the launch of other programs (`StarCitizen.exe`) and inject interactive elements (`browser windows`) into the process. Virus scanners will have a hard time discerning between a "sunrise/sunset calculator" in `Star Citizen` and some "scam hotline advertisement" in `Firefox`. Hence McAfee, BitDefender and others may detect pattern in our app that is very similar to known Malware or Adware, and warn you of the potential risks. We have submitted our app to different anti-virus platforms like `Microsoft Malware Analysis` and `Kaspersky Threat Intelligence` for detailed scanning and white-listing.  
+These are fair warnings. The VerseGuide Overlay is in fact quite similar to sophisticated Malware or Adware: we monitor the launch of other programs (`StarCitizen.exe`) and inject interactive elements (`browser windows`) into the process. Virus scanners will have a hard time discerning between a "sunrise/sunset calculator" in `Star Citizen` and some "scam hotline advertisement" in `Firefox`. Hence McAfee, BitDefender and others may detect patterns in our app that are very similar to known Malware or Adware, and warn you of the potential risks. We have submitted our app to different anti-virus platforms like `Microsoft Malware Analysis` and `Kaspersky Threat Intelligence` for detailed scanning and white-listing.  
 
 ## Made by the Community
 
