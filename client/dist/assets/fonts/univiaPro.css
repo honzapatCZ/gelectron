@@ -1,0 +1,44 @@
+    @font-face{
+  font-family: 'univiaPro';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+        src:local('Univia Pro Medium'),local('UniviaPro-Medium'),url("./2999568/b0987a40-beaf-4f2d-85e1-ed8400bb2436.woff2") format("woff2"),url("./2999568/c4bc31e1-8da4-4a9e-8f45-0a12583a9723.woff") format("woff");
+    }
+    @font-face{
+  font-family: 'univiaPro';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+        src:local('Univia Pro'),local('UniviaPro-Regular'),url("./2999578/8744fb29-6d2f-448c-93ab-f2cce7124c6a.woff2") format("woff2"),url("./2999578/f63931da-7ec5-412b-b390-3366f9beb9fa.woff") format("woff");
+    }
+    @font-face{
+  font-family: 'univiaPro';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+        src:local('Univia Pro Bold'),local('UniviaPro-Bold'),url("./2999598/c333d7d6-8e84-49ca-8001-cd004b1dfbfa.woff2") format("woff2"),url("./2999598/fcd6a22e-f8eb-4d15-b9cb-43482eb0ed95.woff") format("woff");
+    }
+    @font-face{
+  font-family: 'univiaPro';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+        src:local('Univia Pro Light'),local('UniviaPro-Light'),url("./2999608/d97c1076-0251-4214-b15e-6596fa38a92c.woff2") format("woff2"),url("./2999608/34b672ae-b58f-4a9b-ba7c-f55ccf61f50e.woff") format("woff");
+    }
+    @font-face{
+  font-family: 'univiaPro';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+        src:local('Univia Pro Black'),local('UniviaPro-Black'),url("./2999622/7d716f10-1e7e-4706-b888-fa98f745d7bb.woff2") format("woff2"),url("./2999622/670bd202-4b9d-41cf-8a87-b13d90976dc6.woff") format("woff");
+    }
+    @font-face{
+  font-family: 'univiaPro';
+  font-style: normal;
+  font-weight: 100;
+  font-display: swap;
+        src:local('Univia Pro Thin'),local('UniviaPro-Thin'),url("./2999638/bee418f1-960e-4be9-9c74-264cc2517e93.woff2") format("woff2"),url("./2999638/89186c0e-dc72-42bc-8624-b28728a416e8.woff") format("woff");
+    }
+
+

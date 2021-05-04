@@ -2,7 +2,12 @@
 .vscode
 .idea/
 /client/src/main/utils/firebase.ts
-/client/dist/assets/fonts/
 /client/out/
 /client/forge.config.js
 /client/WindowsCodeSigning.pfx
+/client/dist/assets/fonts/2999568/
+/client/dist/assets/fonts/2999578/
+/client/dist/assets/fonts/2999598/
+/client/dist/assets/fonts/2999608/
+/client/dist/assets/fonts/2999622/
+/client/dist/assets/fonts/2999638/
