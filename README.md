@@ -37,14 +37,14 @@ This is an unofficial Star Citizen project, not affiliated with the Cloud Imperi
 
 # Build from Source
 
-### Requirements
+#### Requirements
 
 - Node 12.X.X
 - Electron 11.X.X
 - Visual Studio 2019 (C++ desktop workspace, winsdk 10.0.x).
 - Python 2 (`add to PATH`)
 
-### Electron with node native-addons `electron-overlay` and `node-ovhook`
+#### Electron with node native-addons `electron-overlay` and `node-ovhook`
 
 ```bash
     cd client
@@ -66,7 +66,7 @@ If iohook does complain (not a valid win32 application) something went wrong wit
 I had to copy the electron/v85 and node-v72 folders from another project (ioook 0.9.0) into `client/node-modules/iohook/builds/` (overwrite the downloaded files).
 Hopefully this will be fixed on iohooks end by the time you try to compile this.  
 
-### Recompile game-overlay dll
+#### Recompile game-overlay dll
 
 They are precompiled under `client/dist/overlay` but if you are making changes you might want to compile on your own
 
