@@ -7,20 +7,20 @@ It watches Windows processes and tries to inject overlay elements into Star Citi
 
 ## Installation
 
-We offer two ways to use VerseGuide Overlay:
+We offer two ways to use the VerseGuide Overlay:
 
-- portable archive (zip)
-- installer (exe)
+- portable archive (.zip)
+- installer (.exe)
 
 Both can be downloaded at https://github.com/gulbrillo/VerseGuide-overlay/releases/latest
 
 The zip archive (`VerseGuide-win32-x64-X.X.X.zip`) contains all files necessary for the the overlay. Just unpack it into a folder of your choice and run `VerseGuide.exe`. This is not an installer and does not create any Desktop shortcuts. In oder to remove the app, just delete the folder.
 
-The installer (`VerseGuide-X.X.X.Setup.exe`) does install the app into your Windows user folder and creates a Desktop shortcut in your Start Menu. This version of the app does come with an auto-update feature. You can right-click the Start Menu shortcut in order to uninstall the app. 
+The installer (`VerseGuide-X.X.X.Setup.exe`) does install the app into your Windows user folder and creates a Desktop shortcut in your Start Menu. This version of the app does come with an auto-update feature. You can right-click the Start Menu shortcut in order to remove the installation. 
 
 ## Warning Messages
 
-The VerseGuide Overlay is open source and digitally signed to verify its source along with code integrity. However, we are a small developer team unknown to anti-virus software. Hence you might see messages warning you that the VerseGuide Overlay might be harmful to your PC. We can assure you it is not. But: if you don't trust us, please don't use our app. 
+The VerseGuide Overlay is open source and digitally signed to verify its source along with code integrity. However, we are a small developer team unknown to anti-virus software. Hence you might see warnings that the VerseGuide Overlay might be harmful to your PC. We can assure you it is not. But: if you don't trust us, please don't use our app.
 
 #### Windows Defender Warning
 
