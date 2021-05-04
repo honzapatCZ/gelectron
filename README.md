@@ -35,14 +35,14 @@ These are fair warnings. The VerseGuide Overlay is in fact quite similar to soph
 
 This is an unofficial Star Citizen project, not affiliated with the Cloud Imperium group of companies. All content within this project not authored by its developer or users are property of their respective owners.
 
-## Requirements
+# Build from Source
+
+### Requirements
 
 - Node 12.X.X
 - Electron 11.X.X
 - Visual Studio 2019 (C++ desktop workspace, winsdk 10.0.x).
 - Python 2 (`add to PATH`)
-
-## Build
 
 ### Electron with node native-addons `electron-overlay` and `node-ovhook`
 
