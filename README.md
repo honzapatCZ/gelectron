@@ -24,7 +24,7 @@ The installer (`VerseGuide-X.X.X.Setup.exe`) does install the app into your Wind
 
 ## Warning Messages
 
-The VerseGuide Overlay is open source and digitally signed to verify its source along with code integrity. However, we are a small developer team unknown to anti-virus software. Hence you might see warnings that the VerseGuide Overlay might be harmful to your PC. We can assure you it is not. But: if you don't trust us, please don't use our app.
+The VerseGuide Overlay is open source and digitally signed to verify its source along with code integrity. However, we are a small developer team unknown to anti-virus software. Hence you might see warnings that the VerseGuide Overlay might be harmful to your PC. We can assure you it is not. But please only use software from developers you trust. If that's not us, that's okay.
 
 #### Windows Defender Warning
 
